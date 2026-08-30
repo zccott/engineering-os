@@ -99,10 +99,13 @@ into premature optimization for code that never runs on real-sized data.
     level: "beginner",
     description: "The most fundamental way to store an ordered list of items in memory.",
     explanation: `
-An array is a way to store a group of values right next to each other in
-memory, in order, so you can find any item instantly if you know its
-position (its index). It's one of the most basic building blocks for
-almost every other data structure.
+Imagine a row of numbered storage slots sitting right next to each other,
+so that knowing a slot's number lets you jump straight to it without
+checking any of the others first. That's the idea behind an **array**: a
+way to store a group of values right next to each other in memory, in
+order, so you can find any item instantly if you know its position (its
+index). It's one of the most basic building blocks for almost every other
+data structure.
 
 Because array items sit next to each other in memory, reading any item by
 its index is extremely fast — but inserting or removing an item in the
@@ -174,15 +177,16 @@ linked list (or a different structure entirely) may be a better fit.
     level: "beginner",
     description: "A sequence of characters, and the special rules for working with them efficiently.",
     explanation: `
-A string is just text — a sequence of characters like "hello". At first
-glance it looks like a simple value, but from a data-structures
-perspective, a string behaves a lot like an array of characters, and many
-classic coding problems are really about processing strings efficiently:
-reversing them, searching within them, checking if two strings are related
-in some way.
+You need a way to store and work with text — a username, a message, a file
+of content. That's what a **string** is: a sequence of characters, like
+"hello". At first glance it looks like a simple value, but from a
+data-structures perspective, a string behaves a lot like an array of
+characters, and many classic coding problems are really about processing
+strings efficiently: reversing them, searching within them, checking if
+two strings are related in some way.
     `.trim(),
     analogy:
-      "A string is like a train of connected train cars, each one carrying a single letter. You can look at any car by its position, but the whole train has to be considered when you want to know if it 'matches' another train.",
+      "A string is like a train of connected train cars, each one carrying a single letter. You can look at any car by its position, but the whole train has to be considered when you want to know if it 'matches' another train — and just like you can't repaint one car without effectively building a new train, a string can't be changed in place: any 'edit' actually builds a brand new train car-by-car.",
     examples: [
       {
         title: "Treating a string like an array of characters",

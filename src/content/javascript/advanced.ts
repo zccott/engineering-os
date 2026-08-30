@@ -41,6 +41,24 @@ waitOneSecond()
           { code: ".catch((error) => ...)", explanation: "Runs only if the promise is rejected instead of resolved." },
         ],
       },
+      {
+        title: "A promise that can reject",
+        code: `function fetchUser(id) {
+  return new Promise((resolve, reject) => {
+    if (id <= 0) {
+      reject(new Error("Invalid user id"));
+      return;
+    }
+    resolve({ id, name: "Amara" });
+  });
+}
+
+fetchUser(-1)
+  .then((user) => console.log(user))
+  .catch((error) => console.log("Failed:", error.message)); // "Failed: Invalid user id"`,
+        explanation:
+          "`reject(...)` settles the promise as failed instead of successful, and control jumps straight to `.catch()`, skipping `.then()` entirely.",
+      },
     ],
     howItWorks: `
 A promise starts in a "pending" state. When the task finishes, it either
@@ -227,15 +245,33 @@ console.log("3: end");
           { code: "// 2: timeout callback", explanation: "Only runs once the current code finishes and the call stack is completely empty." },
         ],
       },
+      {
+        title: "Promises run before timers",
+        code: `console.log("1: start");
+
+setTimeout(() => console.log("2: setTimeout"), 0);
+
+Promise.resolve().then(() => console.log("3: promise"));
+
+console.log("4: end");
+
+// Output order: 1, 4, 3, 2`,
+        explanation:
+          "Promise callbacks (microtasks) are always drained before the next timer callback (a macrotask) runs, even if both were scheduled at roughly the same time.",
+      },
     ],
     howItWorks: `
 JavaScript runs your main code on something called the **call stack**. When
 it encounters something asynchronous (like \`setTimeout\` or a network
 request), that task is handed off to the browser, and JavaScript keeps
 running the rest of the main code. Once the async task finishes, its
-callback is placed in a **queue**. The event loop's job is simple: constantly
-check "is the call stack empty?" — and if so, take the next item from the
-queue and run it.
+callback is placed in a queue — but there are actually two of them, checked
+in a strict order. Promise callbacks go into the **microtask queue**;
+timers, network events, and clicks go into the **macrotask queue**. The
+event loop's job is: once the call stack is empty, drain the *entire*
+microtask queue first — running every waiting promise callback, even ones
+added while draining — and only once it's completely empty does it run a
+single macrotask, before checking the microtask queue again.
     `.trim(),
     diagram: `
 Call stack (running now)
@@ -267,7 +303,7 @@ feeling random.
     commonMistakes: [
       "Assuming `setTimeout(fn, 0)` runs immediately — it still waits for the current code to finish first.",
       "Not realizing that a long-running synchronous loop can freeze the page, since nothing else can run until the call stack is clear.",
-      "Confusing the order of promise callbacks (microtasks) and timer callbacks (macrotasks) — promises generally run first.",
+      "Confusing the order of promise callbacks (microtasks) and timer callbacks (macrotasks) — microtasks always finish draining before the next macrotask runs, it's not just a usual tendency.",
     ],
     exercises: [
       { difficulty: "Easy", prompt: "Predict, then verify, the console output order of a mix of `console.log` and `setTimeout` calls." },
@@ -322,6 +358,24 @@ dog.speak(); // "Rex makes a sound."
           { code: "dog.speak();", explanation: "dog has no speak of its own, so JavaScript finds it on animal via the prototype chain." },
         ],
       },
+      {
+        title: "class syntax uses prototypes underneath",
+        code: `class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  speak() {
+    console.log(this.name + " makes a sound.");
+  }
+}
+
+const cat = new Animal("Whiskers");
+cat.speak(); // "Whiskers makes a sound."
+
+console.log(Object.getPrototypeOf(cat) === Animal.prototype); // true`,
+        explanation:
+          "`speak` is defined once, on `Animal.prototype`, and every instance created with `new Animal(...)` shares that same method through the prototype chain — it isn't copied per instance. Note: `Animal.prototype` is a special property that only functions and classes have — it's the template object that becomes the internal fallback link (what `Object.getPrototypeOf` reads back) for every instance created with `new Animal(...)`. They're two names for closely related things, not the same thing.",
+      },
     ],
     howItWorks: `
 Every object has an internal link (accessible via \`Object.getPrototypeOf\`)
@@ -329,6 +383,12 @@ pointing to another object. Property lookup checks the object itself first;
 if not found, it walks up this chain of prototypes. Arrays and functions
 are also objects, and they get useful built-in methods (like \`.map()\` or
 \`.call()\`) this exact same way — from their own prototypes.
+
+Don't confuse this internal link with the \`.prototype\` **property** you see
+on functions and classes (like \`Animal.prototype\`) — that property is only
+a template object, used to set up the internal link on every instance
+created with \`new\`. Plain objects (like \`{}\`) don't have a \`.prototype\`
+property at all, even though they still have an internal prototype link.
     `.trim(),
     whyItExists: `
 Prototypes let many objects share the same methods without each one storing
@@ -493,6 +553,17 @@ console.log([1, 2] + [3, 4]);  // "1,23,4"`,
           { code: "[] + []", explanation: "Arrays get converted to strings for +, and an empty array becomes an empty string." },
         ],
       },
+      {
+        title: "More surprises: closures in loops, and array holes",
+        code: `for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 0);
+}
+// logs: 3, 3, 3 — not 0, 1, 2 (all three closures share the same "var i")
+
+console.log([1, , 3].length); // 3 — the missing middle slot still counts`,
+        explanation:
+          "Using `var` in the loop means every callback closes over the exact same variable, which has already finished looping by the time the callbacks run — switching to `let` fixes it, since each iteration gets its own binding.",
+      },
     ],
     howItWorks: `
 Each of these traces back to a specific rule: floating-point numbers are
@@ -580,6 +651,34 @@ fails, run this other code instead of crashing."
           { code: "} finally {", explanation: "Runs no matter what — whether try succeeded or catch ran." },
         ],
       },
+      {
+        title: "A custom error class",
+        code: `class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+function setAge(age) {
+  if (age < 0) {
+    throw new ValidationError("Age can't be negative");
+  }
+  return age;
+}
+
+try {
+  setAge(-5);
+} catch (error) {
+  if (error instanceof ValidationError) {
+    console.log("Validation failed:", error.message);
+  } else {
+    throw error; // an error we didn't expect — let it propagate
+  }
+}`,
+        explanation:
+          "Custom error classes let a `catch` block tell different kinds of failures apart with `instanceof`, instead of treating every error the same way.",
+      },
     ],
     howItWorks: `
 When code inside \`try\` throws (either automatically, from a failing
@@ -660,6 +759,22 @@ console.log(PI);        // 3.14159`,
           { code: "add(2, 3);", explanation: "Uses the imported function exactly like a locally defined one." },
         ],
       },
+      {
+        title: "A default export",
+        code: `// user.js
+export default class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+// app.js
+import User from "./user.js"; // any name works for a default import
+
+const amara = new User("Amara");`,
+        explanation:
+          "A module can have at most one default export, and the importer is free to name it whatever they like — unlike named exports, which must be imported by their exact name.",
+      },
     ],
     howItWorks: `
 Each file is its own module with its own private scope — nothing inside
@@ -735,6 +850,22 @@ user = null;
           { code: "user = null;", explanation: "Removes the only reference to that object." },
           { code: "// eligible for garbage collection", explanation: "With nothing left pointing to it, the object can be safely cleaned up." },
         ],
+      },
+      {
+        title: "A common leak: a forgotten timer",
+        code: `function startPolling(element) {
+  const id = setInterval(() => {
+    element.textContent = new Date().toLocaleTimeString();
+  }, 1000);
+
+  return () => clearInterval(id); // caller must call this to stop it
+}
+
+const stopPolling = startPolling(document.querySelector("#clock"));
+// ...later, when the clock is no longer needed:
+stopPolling();`,
+        explanation:
+          "As long as `setInterval` keeps running, its callback (and everything it closes over, including `element`) stays reachable — forgetting to call `clearInterval` is one of the most common real-world memory leaks.",
       },
     ],
     howItWorks: `
@@ -826,6 +957,19 @@ console.log(count ?? 10); // 0 — right! ?? only replaces null/undefined`,
           { code: "count ?? 10", explanation: "Keeps 0, because ?? only falls back on null or undefined, not on every falsy value." },
         ],
       },
+      {
+        title: "Optional chaining with function calls and arrays",
+        code: `const api = {
+  getUser: null, // maybe not loaded yet
+};
+
+api.getUser?.(1);      // undefined — skipped, doesn't throw
+
+const users = null;
+console.log(users?.[0]); // undefined — safe even though users isn't an object at all`,
+        explanation:
+          "`?.()` guards a function call that might not exist, and `?.[...]` guards array/bracket access the same way `?.` guards a plain property.",
+      },
     ],
     howItWorks: `
 \`?.\` checks whether the value immediately to its left is \`null\` or
@@ -905,6 +1049,18 @@ console.log(parsed.name); // "Amara" — back to a real object`,
           { code: "console.log(json);", explanation: "That text can now be sent over a network or saved to a file." },
           { code: "JSON.parse(json);", explanation: "Converts JSON text back into a real JavaScript object." },
         ],
+      },
+      {
+        title: "Saving and restoring data with localStorage",
+        code: `const settings = { theme: "dark", fontSize: 16 };
+
+localStorage.setItem("settings", JSON.stringify(settings));
+
+// ...later, maybe after a page reload:
+const saved = JSON.parse(localStorage.getItem("settings"));
+console.log(saved.theme); // "dark"`,
+        explanation:
+          "`localStorage` can only store strings, so JSON is the standard way to save a structured object into it and read a real object back out later.",
       },
     ],
     howItWorks: `
@@ -987,6 +1143,15 @@ console.log(uniqueNumbers.has(2)); // true`,
           { code: "scores.size", explanation: "A real property that always reflects the current number of entries." },
           { code: "new Set([1, 2, 2, 3, 3, 3]);", explanation: "Automatically drops duplicate values, keeping each unique value only once." },
         ],
+      },
+      {
+        title: "Removing duplicates from an array with Set",
+        code: `const numbers = [1, 2, 2, 3, 1, 4];
+
+const unique = [...new Set(numbers)];
+console.log(unique); // [1, 2, 3, 4]`,
+        explanation:
+          "Spreading a Set back into an array is a common one-line pattern for deduplicating an array while preserving the first occurrence of each value.",
       },
     ],
     howItWorks: `

@@ -174,7 +174,7 @@ shared language: a set of rules for how a request should be structured,
 what kinds of requests exist, and how a server should respond.
     `.trim(),
     analogy:
-      "HTTP is like the standard format for a letter: a return address, a recipient address, a subject, and a body. Because everyone agrees on that format, any post office (server) can read and process any properly formatted letter (request).",
+      "HTTP is like the standard format for a letter: a return address, a recipient address, a subject, and a body. Because everyone agrees on that format, any recipient (server) can read a properly formatted letter (request) — and is expected to write back using that same standard format (a response), rather than replying however they feel like.",
     examples: [
       {
         title: "A basic HTTP request/response",
@@ -235,7 +235,7 @@ protocols like WebSockets or dedicated binary protocols fit better there.
       { question: "What's the difference between GET and POST?", answer: "GET requests data without changing anything on the server (and can be cached); POST typically sends data to create or change something on the server." },
     ],
     prerequisites: ["client-and-server"],
-    relatedTopics: ["client-and-server", "rest-apis"],
+    relatedTopics: ["client-and-server", "rest-apis", "authentication-and-sessions", "websockets"],
     keywords: ["http", "protocol", "status code", "method", "stateless"],
   },
   {
@@ -247,16 +247,16 @@ protocols like WebSockets or dedicated binary protocols fit better there.
 An API (Application Programming Interface) is simply a way one piece of
 software lets another piece of software ask it to do things. But an API
 could be organized in a thousand different, inconsistent ways — which
-makes it hard to learn and use. **REST** is a popular, widely-agreed-upon
-style for designing APIs so that they're consistent and predictable across
-countless different services.
+makes it hard to learn and use. **REST** (Representational State Transfer)
+is a popular, widely-agreed-upon style for designing APIs so that they're
+consistent and predictable across countless different services.
 
 The core idea: everything is a "resource" (like a user, a post, a
 product), identified by a URL, and you use standard HTTP methods to act on
 it — GET to read, POST to create, PUT/PATCH to update, DELETE to remove.
     `.trim(),
     analogy:
-      "REST is like a well-labeled filing cabinet where every drawer follows the same layout convention. Once you understand one drawer, you instantly know how to work with any other drawer in any cabinet built the same way.",
+      "REST is like a well-labeled filing cabinet where every drawer follows the same layout convention, and every drawer lets you do the same standard set of things — look inside, add a paper, replace its contents, or remove it. Once you understand one drawer, you instantly know how to work with any other drawer in any cabinet built the same way.",
     examples: [
       {
         title: "REST-style endpoints for a 'posts' resource",
@@ -318,5 +318,183 @@ better.
     prerequisites: ["http"],
     relatedTopics: ["http", "client-and-server", "databases"],
     keywords: ["REST", "API", "endpoint", "resource", "CRUD"],
+  },
+  {
+    id: "proxy-and-reverse-proxy",
+    title: "Proxy & Reverse Proxy",
+    level: "beginner",
+    description: "A middle server that sits between a client and the real destination, on behalf of one side or the other.",
+    explanation: `
+Sometimes a request doesn't go directly from a client to the server that
+will actually handle it — instead, it passes through a middle server
+first. A **forward proxy** sits in front of clients, forwarding their
+requests out on their behalf (often hiding who the client is, or
+filtering what they can reach). A **reverse proxy** sits in front of
+servers, forwarding incoming requests to whichever backend server should
+actually handle them (often hiding how many servers there are, or what
+they look like).
+
+The two solve opposite problems, even though the underlying idea — a
+middle server relaying requests — is the same.
+    `.trim(),
+    analogy:
+      "A forward proxy is like an assistant who makes calls on your behalf so the person on the other end never sees your number. A reverse proxy is like a company's reception desk — every visitor talks to the same receptionist, who then directs them to whichever employee should actually help, without the visitor ever needing to know who works where.",
+    examples: [
+      {
+        title: "A reverse proxy routing to different backends",
+        code: `// Simplified reverse proxy config
+routes: {
+  "/api/*": "backend-server:4000",
+  "/images/*": "image-server:5000",
+  "/*": "web-server:3000",
+}
+// A request to /api/users is forwarded to backend-server,
+// while a request to /home.html goes to web-server —
+// the client only ever talks to one address.`,
+        walkthrough: [
+          { code: '"/api/*": "backend-server:4000"', explanation: "Any request whose path starts with /api goes to the backend server." },
+          { code: '"/images/*": "image-server:5000"', explanation: "Image requests are routed to a separate server entirely." },
+          { code: '"/*": "web-server:3000"', explanation: "Everything else falls through to the default web server." },
+          { code: "the client only ever talks to one address", explanation: "The client has no idea multiple servers exist behind the scenes." },
+        ],
+      },
+    ],
+    howItWorks: `
+A reverse proxy receives every incoming request first, inspects it
+(usually just the path or domain), and forwards it to whichever backend
+server is responsible for handling that kind of request — then relays
+the response back to the client as if it had come from the proxy itself.
+A forward proxy does the mirror image: it sits in front of clients,
+receiving their outgoing requests and forwarding them onward, often
+changing or hiding details about the original request.
+    `.trim(),
+    whyItExists: `
+Without a reverse proxy, clients would need to know the exact address of
+every individual backend service, and every one of those services would
+need to be directly exposed to the internet. A reverse proxy gives
+clients one single, stable address to talk to, while everything about how
+many servers exist and what they do stays hidden and free to change.
+    `.trim(),
+    whenToUse: `
+Reach for a reverse proxy anytime you have more than one backend service
+(or more than one instance of the same service) and want clients to
+interact with a single, stable entry point — this is also exactly what a
+load balancer is, under the hood: a reverse proxy that distributes
+traffic across many identical servers. Reach for a forward proxy when
+clients need their outgoing requests filtered, cached, or have their
+identity hidden.
+    `.trim(),
+    whenNotToUse: `
+For a single, simple server with no need to route between multiple
+backends, a reverse proxy adds an extra network hop with no real benefit
+yet — you can always add one later as the system grows.
+    `.trim(),
+    commonMistakes: [
+      "Confusing a forward proxy (works on behalf of clients) with a reverse proxy (works on behalf of servers) — they solve different problems.",
+      "Forgetting that a reverse proxy is itself a piece of infrastructure that needs to stay up — if it goes down, so does access to everything behind it.",
+      "Exposing internal backend addresses directly instead of routing everything through the proxy, defeating the purpose of hiding the internal architecture.",
+    ],
+    exercises: [
+      { difficulty: "Easy", prompt: "Explain, in your own words, the difference between a forward proxy and a reverse proxy." },
+      { difficulty: "Medium", prompt: "Sketch (in words) a reverse proxy config that routes /api requests to one server and everything else to another." },
+      { difficulty: "Hard", prompt: "Explain how a load balancer and a reverse proxy relate to each other — is a load balancer a kind of reverse proxy, or something separate?" },
+    ],
+    interviewQuestions: [
+      { question: "What's the difference between a forward proxy and a reverse proxy?", answer: "A forward proxy sits in front of clients and forwards their outgoing requests on their behalf; a reverse proxy sits in front of servers and forwards incoming requests to whichever backend should handle them." },
+      { question: "Why would you put a reverse proxy in front of multiple backend servers?", answer: "So clients only need to know one address, while the proxy handles routing requests to the correct backend — hiding the internal architecture and making it easier to change." },
+      { question: "Is a load balancer a type of reverse proxy?", answer: "Effectively yes — a load balancer is a reverse proxy whose specific job is distributing traffic across multiple identical backend servers." },
+    ],
+    prerequisites: ["client-and-server"],
+    relatedTopics: ["load-balancing", "api-gateway"],
+    keywords: ["proxy", "reverse proxy", "forward proxy", "routing"],
+  },
+  {
+    id: "authentication-and-sessions",
+    title: "Authentication & Sessions",
+    level: "beginner",
+    description: "How a server remembers who you are across multiple requests, even though HTTP itself doesn't.",
+    explanation: `
+HTTP is stateless — the server doesn't automatically remember anything
+about you between one request and the next. But most apps clearly do
+remember you: you log in once and stay logged in as you click around.
+That memory has to be built on top of HTTP deliberately, and there are
+two common ways to do it: **sessions** (the server keeps track of who's
+logged in, and gives your browser a small id to prove which session is
+yours) and **tokens** (the server gives your browser a self-contained
+piece of data that proves who you are, without the server needing to
+store anything).
+    `.trim(),
+    analogy:
+      "A session is like getting a wristband at a venue — the venue keeps a list of which wristband numbers were given to which paying customers, and checks your wristband against that list at each door. A token is more like getting a signed, tamper-proof ticket that itself already contains everything needed to prove it's valid — nobody needs to check a list, they just verify the ticket's signature.",
+    examples: [
+      {
+        title: "A simple session-based login flow",
+        code: `// 1. User logs in with correct credentials
+POST /login  { username: "amara", password: "..." }
+
+// 2. Server creates a session record and sends back a cookie
+Set-Cookie: sessionId=abc123; HttpOnly
+
+// 3. Every later request automatically includes that cookie
+GET /dashboard
+Cookie: sessionId=abc123
+
+// 4. Server looks up "abc123" in its session store to know who's asking`,
+        walkthrough: [
+          { code: "POST /login { username, password }", explanation: "The client sends credentials once, to prove identity." },
+          { code: "Set-Cookie: sessionId=abc123", explanation: "The server creates a session record and gives the browser a small id referencing it." },
+          { code: "Cookie: sessionId=abc123", explanation: "The browser automatically resends that cookie on every later request." },
+          { code: 'Server looks up "abc123"', explanation: "The server checks its own storage to find out which user this session id belongs to." },
+        ],
+      },
+    ],
+    howItWorks: `
+With sessions, the server stores session data (who's logged in, since
+when) in memory or a database, keyed by a random session id, and gives
+that id to the browser as a cookie; every later request includes the
+cookie, and the server looks up the matching session. With tokens
+(commonly JWTs), the server instead signs a small piece of data
+containing the user's identity, so it can be verified without a lookup —
+the token itself is the proof, as long as its signature checks out.
+    `.trim(),
+    whyItExists: `
+Without some form of authentication and a session/token mechanism, a
+server would have no way to distinguish one visitor from another, or
+remember that you already proved who you are — every request would need
+to include your full credentials again, which is both impractical and
+insecure.
+    `.trim(),
+    whenToUse: `
+Use session-based authentication when you want the server to retain full
+control — able to instantly revoke access by deleting a session record.
+Use token-based authentication when you want to avoid a centralized
+lookup on every request, especially across multiple independent
+services, at the cost of tokens being harder to revoke early.
+    `.trim(),
+    whenNotToUse: `
+Don't build authentication from scratch for anything beyond a learning
+exercise — subtle mistakes here (like weak session ids, or improperly
+verifying a token's signature) are a common source of serious security
+vulnerabilities; use well-established, audited libraries and frameworks
+instead.
+    `.trim(),
+    commonMistakes: [
+      "Storing session ids or tokens somewhere JavaScript can read them (making them vulnerable to theft via XSS) instead of an HttpOnly cookie.",
+      "Assuming a token can be instantly revoked the way a session can — a signed token generally stays valid until it expires, unless you build extra revocation logic.",
+      "Sending credentials or session identifiers over plain HTTP instead of HTTPS, exposing them to anyone on the network.",
+    ],
+    exercises: [
+      { difficulty: "Easy", prompt: "Explain, in your own words, why HTTP being stateless means a server needs a separate mechanism to 'remember' a logged-in user." },
+      { difficulty: "Medium", prompt: "Describe the difference between a session id and a token, and one advantage each has over the other." },
+      { difficulty: "Hard", prompt: "Explain how a service could quickly revoke a compromised session versus a compromised token, and why one is harder." },
+    ],
+    interviewQuestions: [
+      { question: "Why can't the server just 'remember' a user across requests using HTTP alone?", answer: "HTTP is stateless by design — each request is handled independently, so remembering a user requires an explicit mechanism like a session or token layered on top." },
+      { question: "What's the difference between a session and a token?", answer: "A session stores the user's state on the server, identified by an id the client holds; a token holds the user's state itself (signed, so it can be verified), without the server needing to store anything." },
+      { question: "Why is a token harder to revoke early than a session?", answer: "A session can be invalidated by simply deleting its record on the server; a signed token is self-contained and remains valid until it expires, unless additional revocation tracking is built." },
+    ],
+    prerequisites: ["http", "client-and-server"],
+    relatedTopics: ["http", "rest-apis"],
+    keywords: ["authentication", "session", "token", "JWT", "cookie", "login"],
   },
 ];

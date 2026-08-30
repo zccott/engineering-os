@@ -150,7 +150,10 @@ export default function ProblemPage({ category, problem }: ProblemPageProps) {
             <Chip label={`Space: ${solution.spaceComplexity}`} size="small" variant="outlined" />
           </Box>
           <RichText text={solution.explanation} />
-          <CodeBlock example={{ code: solution.code, walkthrough: solution.walkthrough }} />
+          <CodeBlock
+            example={{ code: solution.code, walkthrough: solution.walkthrough }}
+            testCases={problem.examples}
+          />
         </Box>
       ))}
 

@@ -122,12 +122,31 @@ user.age = 29; // update a property`,
           { code: "user.age = 29;", explanation: "Updates the existing age property to a new value." },
         ],
       },
+      {
+        title: "Objects with methods",
+        code: `const user = {
+  name: "Amara",
+  greet() {
+    console.log("Hi, I'm " + this.name);
+  },
+};
+
+user.greet(); // "Hi, I'm Amara"`,
+        explanation:
+          "A function stored as a property is called a method. Inside it, `this` refers back to the object it was called on.",
+      },
     ],
     howItWorks: `
 An object stores each value under a key. When you write \`user.name\`,
 JavaScript looks up the key \`"name"\` inside the object and returns whatever
 value is stored there. Unlike arrays, there's no guaranteed numeric order —
 you access things by name, not position.
+
+One important detail: a variable holding an object doesn't hold the object
+itself, it holds a **reference** — directions to where the object actually
+lives. So copying that variable with \`=\` only copies the directions, not
+the object: both variables end up pointing at the exact same object, and
+changing one is visible through the other.
     `.trim(),
     whyItExists: `
 Real-world things usually have multiple attributes at once — a product has
@@ -303,6 +322,30 @@ console.log(counter()); // 3`,
           { code: "const counter = makeCounter();", explanation: "Runs makeCounter once, getting back the inner function with its own private count." },
         ],
       },
+      {
+        title: "A private bank balance",
+        code: `function makeAccount(startingBalance) {
+  let balance = startingBalance;
+
+  return {
+    deposit(amount) {
+      balance += amount;
+      return balance;
+    },
+    withdraw(amount) {
+      balance -= amount;
+      return balance;
+    },
+  };
+}
+
+const account = makeAccount(100);
+account.deposit(50);   // 150
+account.withdraw(30);  // 120
+// there is no way to read or set "balance" directly from outside`,
+        explanation:
+          "This time the closure is shared by two returned functions instead of one, and `balance` is completely private — the only way to affect it is through `deposit`/`withdraw`.",
+      },
     ],
     howItWorks: `
 When a function is created, it keeps a hidden link to the scope it was
@@ -385,27 +428,85 @@ The core ones you'll use constantly:
       "Think of an assembly line. forEach is a worker who inspects every item and does something with it but hands nothing back. map is a worker who replaces every item with a new one. filter is a worker who only lets some items through. reduce is the worker at the very end who melts everything down into one final product.",
     examples: [
       {
-        title: "The core methods side by side",
+        title: "forEach — run code for every item",
+        code: `const fruits = ["apple", "banana", "cherry"];
+
+fruits.forEach((fruit) => {
+  console.log(fruit);
+});
+// logs: apple, banana, cherry`,
+        explanation:
+          "`forEach` runs the callback once per item and returns `undefined` — it's for side effects (like logging), not for building a new value.",
+      },
+      {
+        title: "forEach — using the index and outer variables",
+        code: `const scores = [70, 85, 90];
+let total = 0;
+
+scores.forEach((score, index) => {
+  console.log(\`Test \${index + 1}: \${score}\`);
+  total += score;
+});
+
+console.log("Total:", total); // 245`,
+        explanation:
+          "The callback also receives the index as a second argument, and can freely read and update variables from the surrounding scope — forEach itself still returns undefined either way.",
+      },
+      {
+        title: "map — transform every item into something new",
+        code: `const prices = [10, 20, 30];
+
+const withTax = prices.map((price) => price * 1.1);
+console.log(withTax); // [11, 22, 33]`,
+      },
+      {
+        title: "filter — keep only the items that pass a test",
+        code: `const ages = [12, 18, 25, 16, 30];
+
+const adults = ages.filter((age) => age >= 18);
+console.log(adults); // [18, 25, 30]`,
+      },
+      {
+        title: "find, some, and every — testing items",
+        code: `const inventory = [
+  { name: "widget", stock: 0 },
+  { name: "gadget", stock: 5 },
+];
+
+const outOfStock = inventory.find((item) => item.stock === 0);
+console.log(outOfStock); // { name: "widget", stock: 0 }
+
+console.log(inventory.some((item) => item.stock === 0)); // true
+console.log(inventory.every((item) => item.stock > 0));  // false`,
+      },
+      {
+        title: "reduce — combine every item into a single value",
         code: `const numbers = [1, 2, 3, 4, 5];
 
-numbers.forEach((n) => console.log(n));          // prints each number, returns undefined
-
-const doubled = numbers.map((n) => n * 2);       // [2, 4, 6, 8, 10]
-
-const evens = numbers.filter((n) => n % 2 === 0); // [2, 4]
-
-const firstBig = numbers.find((n) => n > 3);     // 4
-
-const hasNegative = numbers.some((n) => n < 0);  // false
-const allPositive = numbers.every((n) => n > 0); // true
-
-const total = numbers.reduce((sum, n) => sum + n, 0); // 15`,
+const total = numbers.reduce((sum, n) => sum + n, 0);
+console.log(total); // 15`,
         walkthrough: [
-          { code: "numbers.forEach((n) => console.log(n));", explanation: "Runs the callback once per item, purely for its side effect; forEach always returns undefined." },
-          { code: "numbers.map((n) => n * 2);", explanation: "Builds and returns a brand-new array, one output per input item." },
-          { code: "numbers.filter((n) => n % 2 === 0);", explanation: "Builds a new array containing only the items where the callback returned true." },
-          { code: "numbers.find((n) => n > 3);", explanation: "Stops as soon as it finds one matching item, and returns that item — not an array." },
-          { code: "numbers.reduce((sum, n) => sum + n, 0);", explanation: "Carries an accumulator (starting at 0) through every item, adding each one in turn." },
+          { code: "numbers.reduce((sum, n) => sum + n, 0)", explanation: "Starts the accumulator (sum) at 0, then adds each number to it in turn." },
+          { code: "(sum, n) => sum + n", explanation: "Whatever this callback returns becomes the accumulator for the next item." },
+          { code: "0", explanation: "The starting value — reduce would throw on an empty array without one." },
+        ],
+      },
+      {
+        title: "reduce — building an object (counting occurrences)",
+        code: `const words = ["apple", "banana", "apple", "cherry", "banana", "apple"];
+
+const counts = words.reduce((tally, word) => {
+  tally[word] = (tally[word] || 0) + 1;
+  return tally;
+}, {});
+
+console.log(counts); // { apple: 3, banana: 2, cherry: 1 }`,
+        explanation:
+          "reduce isn't just for sums — the accumulator can be any value, including an object you build up piece by piece.",
+        walkthrough: [
+          { code: "tally[word] = (tally[word] || 0) + 1;", explanation: "Reads the current count for this word (or 0 the first time), adds 1, and stores it back." },
+          { code: "return tally;", explanation: "Every reduce callback must return the accumulator — even here, where it's the same object being mutated and handed back each time." },
+          { code: "{}", explanation: "The starting accumulator: an empty object to build counts into." },
         ],
       },
     ],
@@ -506,6 +607,17 @@ const parts = "2026-08-29".split("-");  // ["2026", "08", "29"]`,
           { code: '"2026-08-29".split("-")', explanation: 'Breaks the string into an array wherever a "-" appears.' },
         ],
       },
+      {
+        title: "Searching and replacing within a string",
+        code: `const sentence = "The cat sat on the mat";
+
+console.log(sentence.indexOf("cat"));         // 4
+console.log(sentence.replace("cat", "dog"));  // "The dog sat on the mat"
+console.log(sentence.startsWith("The"));      // true
+console.log(sentence.slice(4, 7));            // "cat"`,
+        explanation:
+          "`indexOf` finds a position, `replace` swaps text, `startsWith` checks the beginning, and `slice` pulls out a substring by position — all without touching the original string.",
+      },
     ],
     howItWorks: `
 Because strings are immutable in JavaScript, every one of these methods
@@ -587,6 +699,25 @@ greetUser("Amara", (message) => {
           { code: "onDone(message);", explanation: "Calls the callback, handing it the result." },
           { code: 'greetUser("Amara", (message) => {...});', explanation: "Passes an arrow function as the callback, which runs once greetUser calls it." },
         ],
+      },
+      {
+        title: "Two different callbacks for success and failure",
+        code: `function checkAge(age, onAllowed, onDenied) {
+  if (age >= 18) {
+    onAllowed();
+  } else {
+    onDenied();
+  }
+}
+
+checkAge(
+  20,
+  () => console.log("Access granted"),
+  () => console.log("Access denied")
+);
+// logs "Access granted"`,
+        explanation:
+          "A function can accept more than one callback — here, exactly one of the two runs, depending on the outcome.",
       },
     ],
     howItWorks: `
@@ -672,6 +803,18 @@ console.log(triple(5)); // 15`,
           { code: "const double = multiplyBy(2);", explanation: "double is now a function that always multiplies by 2." },
           { code: "double(5);", explanation: "Calls that customized function, giving 10." },
         ],
+      },
+      {
+        title: "A function that takes a function as a parameter",
+        code: `function applyTwice(fn, value) {
+  return fn(fn(value));
+}
+
+const addOne = (n) => n + 1;
+
+console.log(applyTwice(addOne, 5)); // 7 — addOne(addOne(5))`,
+        explanation:
+          "`applyTwice` doesn't know or care what `fn` actually does — it just applies whatever function it's given, twice. That flexibility is the whole point of accepting a function as a parameter.",
       },
     ],
     howItWorks: `

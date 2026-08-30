@@ -1,21 +1,19 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { CodeExample } from "../../types/content";
+import type { ProblemExample } from "../../types/problem";
 import { InlineText } from "../TopicPage/RichText";
+import CodePlayground from "./CodePlayground";
 
 interface CodeBlockProps {
   example: CodeExample;
+  testCases?: ProblemExample[];
 }
 
 const CODE_FONT_STACK =
   'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace';
 
-/**
- * A readable, monospace code block with an optional caption, explanation,
- * and a numbered line-by-line walkthrough. Scrolls horizontally on its own
- * rather than letting the page overflow (important on mobile).
- */
-export default function CodeBlock({ example }: CodeBlockProps) {
+export default function CodeBlock({ example, testCases }: CodeBlockProps) {
   return (
     <Box sx={{ my: 2.5 }}>
       {example.title && (
@@ -46,6 +44,9 @@ export default function CodeBlock({ example }: CodeBlockProps) {
       >
         <code>{example.code}</code>
       </Box>
+
+      <CodePlayground code={example.code} testCases={testCases} />
+
       {example.explanation && (
         <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
           <InlineText text={example.explanation} />

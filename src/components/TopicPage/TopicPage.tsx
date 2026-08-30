@@ -23,6 +23,8 @@ import RelatedTopics from "../RelatedTopics/RelatedTopics";
 import { useProgress } from "../../hooks/useProgress";
 import { useBookmarks } from "../../hooks/useBookmarks";
 import { getAdjacentTopics } from "../../content";
+import { getProblemCategoriesForTopic } from "../../content/dsaProblemLinks";
+import { getCategory, getProblemCount } from "../../content/problems";
 import type { Subject, Topic } from "../../types/content";
 
 interface TopicPageProps {
@@ -114,6 +116,12 @@ export default function TopicPage({ subject, topic }: TopicPageProps) {
   const status = getStatus(topic.id);
   const bookmarked = isBookmarked(topic.id);
   const { prev, next } = getAdjacentTopics(subject.id, topic.id);
+  const practiceCategories =
+    subject.id === "dsa"
+      ? getProblemCategoriesForTopic(topic.id)
+          .map((id) => getCategory(id))
+          .filter((c): c is NonNullable<typeof c> => Boolean(c))
+      : [];
 
   return (
     <Box sx={{ maxWidth: 850, mx: "auto" }}>
@@ -260,6 +268,44 @@ export default function TopicPage({ subject, topic }: TopicPageProps) {
                 <Typography variant="body1">
                   <InlineText text={exercise.prompt} />
                 </Typography>
+              </Box>
+            ))}
+          </Box>
+        </>
+      )}
+
+      {practiceCategories.length > 0 && (
+        <>
+          <SectionHeading>Practice Problems</SectionHeading>
+          <Typography variant="body2" sx={{ color: "text.secondary", mb: 1.5 }}>
+            Ready to apply this? Try real coding problems that use this pattern.
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {practiceCategories.map((category) => (
+              <Box
+                key={category.id}
+                onClick={() => navigate(`/problems/${category.id}`)}
+                sx={{
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 1.5,
+                  p: 1.5,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 2,
+                  cursor: "pointer",
+                  "&:hover": { borderColor: "primary.main" },
+                }}
+              >
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  {category.title}
+                </Typography>
+                <Chip
+                  label={`${getProblemCount(category.id)} problems`}
+                  size="small"
+                  variant="outlined"
+                />
               </Box>
             ))}
           </Box>

@@ -18,7 +18,7 @@ swapping, dividing problems into smaller pieces — that show up constantly
 elsewhere in programming.
     `.trim(),
     analogy:
-      "Imagine sorting a messy hand of playing cards. You could repeatedly scan for the smallest card and move it to the front (simple, but slow with many cards), or split the hand in half, sort each half, and merge them back together in order (more clever, and much faster for a big hand).",
+      "Imagine sorting a messy hand of playing cards. You could repeatedly compare each pair of neighboring cards and swap them if they're out of order, making pass after pass until nothing needs swapping (simple, but slow with many cards — like bubble sort), or split the hand in half, sort each half, and merge them back together in order (more clever, and much faster for a big hand — like merge sort).",
     examples: [
       {
         title: "Bubble sort (simple, but O(n²))",
@@ -54,8 +54,13 @@ Most simple sorting algorithms (like bubble sort) repeatedly compare
 neighboring items and swap them if they're in the wrong order, needing
 many passes over the data — O(n²). Faster algorithms (like merge sort) use
 a "divide and conquer" strategy: split the list in half, sort each half
-recursively, then merge the two sorted halves back together — achieving
-O(n log n).
+recursively, then merge the two sorted halves back together.
+
+The \`log n\` in O(n log n) comes from the same halving idea used in binary
+search: splitting a list of size n in half, then in half again, and so on,
+only takes about log₂(n) rounds before you're down to single items. Merge
+sort does that splitting (log n levels), and then spends O(n) work merging
+everything back together at each level — giving O(n log n) overall.
     `.trim(),
     diagram: `
 Merge sort:
@@ -102,8 +107,8 @@ well-tested and normally faster than anything you'd write by hand.
       { question: "How does merge sort achieve O(n log n)?", answer: "By recursively splitting the array in half (log n levels of splitting) and merging sorted halves in linear time at each level." },
       { question: "Why would you use the built-in `.sort()` instead of writing your own?", answer: "Built-in implementations are heavily optimized and tested; writing your own is mainly useful for learning the underlying algorithms, not for production use." },
     ],
-    prerequisites: ["recursion", "arrays"],
-    relatedTopics: ["big-o", "arrays", "recursion"],
+    prerequisites: ["recursion", "arrays", "binary-search"],
+    relatedTopics: ["big-o", "arrays", "recursion", "binary-search"],
     keywords: ["sorting", "bubble sort", "merge sort", "quicksort", "divide and conquer"],
   },
 ];

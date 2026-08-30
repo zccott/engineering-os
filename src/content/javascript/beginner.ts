@@ -35,6 +35,16 @@ as "the language of the web."
           { code: ";", explanation: "The semicolon marks the end of this instruction, the same way a period ends a sentence." },
         ],
       },
+      {
+        title: "Reacting to a click",
+        code: `const button = document.querySelector("button");
+
+button.addEventListener("click", () => {
+  alert("You clicked the button!");
+});`,
+        explanation:
+          "This is closer to what JavaScript is actually used for day to day: finding a piece of the page, then telling it what to do when the user interacts with it.",
+      },
     ],
     howItWorks: `
 Every browser (Chrome, Firefox, Safari, Edge) has a built-in program called a
@@ -140,6 +150,18 @@ const username = "amara";
           { code: "// username = ...", explanation: "Commented out — uncommenting it would throw an error, since const variables can't be reassigned." },
         ],
       },
+      {
+        title: "Using a variable to avoid repeating a value",
+        code: `const taxRate = 0.08;
+
+const price1 = 20;
+const total1 = price1 + price1 * taxRate;
+
+const price2 = 45;
+const total2 = price2 + price2 * taxRate;`,
+        explanation:
+          "`taxRate` is defined once and reused in both calculations — if the tax rate ever changes, there's exactly one place to update it.",
+      },
     ],
     howItWorks: `
 When JavaScript sees \`let score = 0\`, it sets aside a small space in memory,
@@ -219,6 +241,14 @@ console.log(typeof undefined); // "undefined"`,
           { code: "typeof undefined", explanation: 'A variable with no value yet reports "undefined".' },
         ],
       },
+      {
+        title: "The same operator, different types, different behavior",
+        code: `console.log(2 + 3);       // 5   — both numbers, so + adds them
+console.log("2" + "3");   // "23" — both strings, so + joins them
+console.log("2" + 3);     // "23" — mixed, so the number becomes a string first`,
+        explanation:
+          "The `+` operator behaves differently depending on the types of its two values — this is exactly why knowing a value's type matters.",
+      },
     ],
     howItWorks: `
 When JavaScript stores a value, it tags it internally with a type. This tag
@@ -268,8 +298,10 @@ and function arguments coming from code you don't control.
     level: "beginner",
     description: "Symbols that perform actions on values, like math or comparisons.",
     explanation: `
-An operator is a symbol that tells JavaScript to do something with one or
-more values — add them, compare them, combine them.
+You constantly need to do things with values — add two numbers together,
+check which of two is bigger, or combine two conditions into one decision.
+JavaScript gives you a set of symbols, called **operators**, that do exactly
+that: each one takes one or more values and produces a result.
 
 A few groups you'll use daily:
 
@@ -291,6 +323,19 @@ const isBigger = 10 > 20;  // false`,
           { code: "const isEqual = 10 === 10;", explanation: "Compares 10 to 10 with strict equality, storing true." },
           { code: "const isBigger = 10 > 20;", explanation: "Checks whether 10 is greater than 20, storing false." },
         ],
+      },
+      {
+        title: "Logical operators combining conditions",
+        code: `const age = 20;
+const hasTicket = true;
+
+const canEnter = age >= 18 && hasTicket;
+console.log(canEnter); // true
+
+const skipLine = age < 12 || age > 65;
+console.log(skipLine); // false`,
+        explanation:
+          "`&&` requires both sides to be true; `||` only needs one side to be true. Both are common ways to combine multiple conditions into one decision.",
       },
     ],
     howItWorks: `
@@ -368,12 +413,22 @@ if (hour < 12) {
           { code: "} else {", explanation: "Would run only if neither condition above matched." },
         ],
       },
+      {
+        title: "A ternary expression for a simple either/or",
+        code: `const age = 20;
+
+const message = age >= 18 ? "You can vote" : "You can't vote yet";
+console.log(message); // "You can vote"`,
+        explanation:
+          "For a simple choice between two values, a ternary (`condition ? ifTrue : ifFalse`) is a compact one-line alternative to a full if/else.",
+      },
     ],
     howItWorks: `
 JavaScript checks the condition inside the parentheses. If it evaluates to
-a truthy value, it runs that block and skips the rest. Otherwise, it moves
-to the next \`else if\` and repeats the check, finally falling into \`else\` if
-nothing else matched.
+a **truthy** value — basically, anything except \`false\`, \`0\`, \`""\`, \`null\`,
+\`undefined\`, or \`NaN\` (those are the "falsy" values) — it runs that block and
+skips the rest. Otherwise, it moves to the next \`else if\` and repeats the
+check, finally falling into \`else\` if nothing else matched.
     `.trim(),
     diagram: `
 Check condition
@@ -463,6 +518,17 @@ while (count > 0) {
   count = count - 1;
 }
 // logs 3, 2, 1`,
+      },
+      {
+        title: "A for...of loop — looping over an array directly",
+        code: `const fruits = ["apple", "banana", "cherry"];
+
+for (const fruit of fruits) {
+  console.log(fruit);
+}
+// logs apple, banana, cherry`,
+        explanation:
+          "`for...of` loops directly over the values in an array (or any other iterable), so there's no counter to manage and no risk of an off-by-one error.",
       },
     ],
     howItWorks: `
