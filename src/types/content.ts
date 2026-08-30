@@ -1,4 +1,4 @@
-// Core content types for the Engineering OS knowledge base.
+// Core content types for the EngineeringWiki knowledge base.
 // All learning content (JavaScript, DSA, System Design) is described
 // using these shapes, so pages/components never hardcode subject content.
 

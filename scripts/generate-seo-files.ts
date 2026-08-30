@@ -77,7 +77,7 @@ const problemCategoryLinks = problemCategories
   .map((c) => `- [${c.title}](${SITE_URL}/problems/${c.id}): ${c.description}`)
   .join("\n");
 
-const llmsTxt = `# Engineering OS
+const llmsTxt = `# EngineeringWiki
 
 > A free, open-source software-engineering knowledge base. Every topic
 > follows the same structure: What is it? / Explain Like I'm 10 / Simple

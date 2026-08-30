@@ -382,6 +382,104 @@ purchase even if the product is later renamed.
     keywords: ["normalization", "denormalization", "data duplication", "schema design"],
   },
   {
+    id: "constraints",
+    title: "Constraints",
+    level: "intermediate",
+    description: "Rules attached directly to a table's columns that the database itself enforces, so invalid data can never be saved in the first place.",
+    explanation: `
+Primary and foreign keys are actually just two specific kinds of a
+broader idea: a **constraint** — a rule attached to a column (or a
+combination of columns) that the database refuses to let a row violate.
+Beyond keys, the most common constraints are \`NOT NULL\` (this column
+can never be left empty), \`UNIQUE\` (no two rows may share the same
+value here), \`DEFAULT\` (fill in a value automatically when none is
+given), and \`CHECK\` (a custom condition the value must satisfy, like
+"price must be greater than zero").
+
+The point of all of them is the same: instead of trusting every piece
+of application code, forever, to remember to validate something, the
+database enforces the rule itself, permanently, no matter what code
+tries to write to it.
+    `.trim(),
+    analogy:
+      "Constraints are like the physical slots on a vending machine tray — a can simply cannot be placed sideways or upside down, not because someone remembered to check, but because the slot itself is shaped so it won't fit any other way. Application-level validation is more like a sign asking people to load cans right-side up: helpful, but nothing stops someone from ignoring it.",
+    examples: [
+      {
+        title: "The four common non-key constraints",
+        code: `CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  sku TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  price_cents INTEGER NOT NULL CHECK (price_cents > 0),
+  in_stock BOOLEAN NOT NULL DEFAULT true
+);`,
+        explanation: "Four different rules, each enforced permanently by the database itself: no two products can share a sku, name and price_cents can never be left empty, price_cents must be a positive number, and in_stock quietly defaults to true when not specified.",
+        walkthrough: [
+          { code: "sku TEXT UNIQUE NOT NULL", explanation: "Combines two constraints on one column: it must have a value, and that value must not already exist on another row." },
+          { code: "price_cents INTEGER NOT NULL CHECK (price_cents > 0)", explanation: "CHECK enforces an arbitrary condition — here, that a nonsensical price like 0 or -500 can never be saved, regardless of what application code sends." },
+          { code: "in_stock BOOLEAN NOT NULL DEFAULT true", explanation: "If an INSERT doesn't mention in_stock at all, the database fills in true automatically rather than leaving it empty." },
+        ],
+      },
+      {
+        title: "What happens when a constraint is violated",
+        code: `INSERT INTO products (sku, name, price_cents)
+VALUES ('SKU-1', 'Desk Lamp', -500);
+-- ERROR: new row violates check constraint "products_price_cents_check"`,
+        explanation: "The insert never happens at all — the database rejects the entire statement the moment any one constraint fails, rather than saving a partially-valid row.",
+      },
+    ],
+    howItWorks: `
+Every constraint is checked at the moment a row is inserted or updated,
+before the change is actually committed. If any constraint on the row
+fails, the entire statement is rejected outright and nothing is written
+— there's no such thing as a row that's "half-valid." This makes
+constraints the last line of defense: even if application-level
+validation has a bug, gets bypassed, or a second application (or a
+future developer) writes to the same table without knowing about that
+validation, the database itself still refuses invalid data.
+    `.trim(),
+    whyItExists: `
+Relying purely on application code to validate data means every single
+place that ever writes to a table — every service, every script, every
+future feature — has to remember and correctly reimplement the same
+rules. Constraints exist to move the rule into the one place all of
+those writers ultimately pass through: the database itself, where it
+can never be forgotten or bypassed.
+    `.trim(),
+    whenToUse: `
+Add a constraint for any rule that must hold no matter what — a price
+that can never be negative, an email that must be unique, a status
+that can never be left blank. Application-level validation is still
+worth having too (for friendlier error messages, shown earlier), but
+the constraint is what actually guarantees the rule holds.
+    `.trim(),
+    whenNotToUse: `
+Constraints aren't the right tool for validation that depends on
+context the database doesn't have — like "this discount code is only
+valid for accounts created in the last 30 days" — or for anything that
+needs a friendly, specific error message shown immediately in a form;
+that kind of logic belongs in application-level validation instead.
+    `.trim(),
+    commonMistakes: [
+      "Validating a rule only in application code and assuming that's sufficient, when a second script, migration, or service writing to the same table can easily bypass it.",
+      "Adding a UNIQUE constraint after a table already contains duplicate values, which fails immediately until the existing duplicates are cleaned up first.",
+      "Forgetting that a failed constraint rejects the entire statement — not just the one offending column — so other valid-looking changes in the same INSERT or UPDATE are rejected too.",
+    ],
+    exercises: [
+      { difficulty: "Easy", prompt: "Write a CREATE TABLE for a coupons table where the code column must be unique and not null." },
+      { difficulty: "Medium", prompt: "Add a CHECK constraint to a reservations table ensuring that a party_size column is always greater than 0." },
+      { difficulty: "Hard", prompt: "Explain why relying only on application-level validation for 'email must be unique' can still result in duplicate emails, and how a UNIQUE constraint prevents that regardless of the application's behavior." },
+    ],
+    interviewQuestions: [
+      { question: "What is a database constraint?", answer: "A rule attached to a column or combination of columns that the database itself enforces, rejecting any row that would violate it." },
+      { question: "What's the difference between NOT NULL and CHECK?", answer: "NOT NULL simply requires a column to have some value; CHECK enforces an arbitrary custom condition that value must satisfy, like being greater than zero." },
+      { question: "Why add a database constraint if the application already validates the same rule?", answer: "Because application-level validation can be bypassed, buggy, or simply missing in some other piece of code that writes to the same table — the constraint is what guarantees the rule holds no matter what writes to the database." },
+    ],
+    prerequisites: ["primary-and-foreign-keys"],
+    relatedTopics: ["primary-and-foreign-keys", "basic-sql-queries", "normalization"],
+    keywords: ["constraints", "NOT NULL", "UNIQUE", "CHECK", "DEFAULT", "data integrity"],
+  },
+  {
     id: "transactions-and-acid",
     title: "Transactions & ACID",
     level: "intermediate",

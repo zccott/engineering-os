@@ -4,7 +4,7 @@ Instructions for AI coding agents working in this repo.
 
 ## What this is
 
-**Engineering OS** — a personal software-engineering learning site. Purpose:
+**EngineeringWiki** — a personal software-engineering learning site. Purpose:
 "Learn once. Understand deeply. Never start from zero again." It's a
 content-driven React app, not a product with business logic — most of the
 value lives in `src/content/`, not in components.

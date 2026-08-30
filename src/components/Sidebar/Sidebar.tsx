@@ -99,7 +99,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
         variant="overline"
         sx={{ color: "text.disabled", fontWeight: 700, letterSpacing: 1, pl: 1.75, mb: 1, display: "block" }}
       >
-        Engineering OS
+        EngineeringWiki
       </Typography>
 
       <List disablePadding>

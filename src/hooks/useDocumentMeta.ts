@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE_NAME = "Engineering OS";
+const SITE_NAME = "EngineeringWiki";
 const SITE_URL = "https://engineeringwiki.vercel.app";
 
 export interface DocumentMeta {

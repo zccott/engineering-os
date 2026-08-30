@@ -1,4 +1,4 @@
-# Engineering OS
+# EngineeringWiki
 
 > A free, open-source software-engineering knowledge base. Every topic
 > follows the same structure: What is it? / Explain Like I'm 10 / Simple
@@ -121,6 +121,7 @@ Building the server side of an application: routing, middleware, APIs, and deplo
   - [Dependency Injection](https://engineeringwiki.vercel.app/backend/dependency-injection): Handing a function or class the things it needs from outside, rather than letting it create those things itself — making it far easier to swap or test.
   - [Testing Backend Code](https://engineeringwiki.vercel.app/backend/testing-backend-code): The difference between checking one small piece of logic in isolation and checking that a real request flows correctly through the whole app.
   - [Deployment & CI/CD Basics](https://engineeringwiki.vercel.app/backend/deployment-and-cicd): What actually happens between pushing a code change and that change running live for real users, at a conceptual level.
+  - [Building with WebSockets](https://engineeringwiki.vercel.app/backend/websockets-in-practice): What actually changes on the server when a connection stays open — handling events, pushing messages, broadcasting, and what happens when a client drops.
 
 ## Databases
 
@@ -135,6 +136,7 @@ Hands-on database skills: SQL, schema design, indexing, and working with an ORM.
   - [Aggregation](https://engineeringwiki.vercel.app/databases/aggregation): Collapsing many rows down into a single summary value — a count, a total, an average — instead of listing every individual row.
   - [Indexes](https://engineeringwiki.vercel.app/databases/indexes): A separate lookup structure the database maintains so it can jump straight to matching rows instead of scanning the whole table.
   - [Normalization](https://engineeringwiki.vercel.app/databases/normalization): Organizing tables so each piece of information is stored in exactly one place, instead of copied and repeated everywhere it's needed.
+  - [Constraints](https://engineeringwiki.vercel.app/databases/constraints): Rules attached directly to a table's columns that the database itself enforces, so invalid data can never be saved in the first place.
   - [Transactions & ACID](https://engineeringwiki.vercel.app/databases/transactions-and-acid): Grouping several database operations into one all-or-nothing unit, so a failure partway through never leaves data half-changed.
   - [ORMs](https://engineeringwiki.vercel.app/databases/orms): A library that lets application code work with database rows as regular objects, generating SQL behind the scenes instead of you writing it by hand.
   - [PostgreSQL in Depth](https://engineeringwiki.vercel.app/databases/postgresql-deep-dive): The PostgreSQL-specific features beyond standard SQL — richer data types, auto-incrementing ids, and the psql command-line client.

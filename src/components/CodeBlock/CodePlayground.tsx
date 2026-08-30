@@ -34,7 +34,7 @@ interface OutputLine {
 const SANDBOX_HTML = `<!doctype html><html><body><button>Sample button</button><script>
 (function () {
   function send(type, args) {
-    parent.postMessage({ source: "engineering-os-playground", type: type, args: args.map(String) }, "*");
+    parent.postMessage({ source: "engineeringwiki-playground", type: type, args: args.map(String) }, "*");
   }
   ["log", "warn", "error", "info"].forEach(function (method) {
     console[method] = function () {
@@ -76,7 +76,7 @@ export default function CodePlayground({ code, testCases }: CodePlaygroundProps)
   useEffect(() => {
     function handleMessage(event: MessageEvent) {
       if (
-        event.data?.source !== "engineering-os-playground" ||
+        event.data?.source !== "engineeringwiki-playground" ||
         event.source !== iframeRef.current?.contentWindow
       ) {
         return;

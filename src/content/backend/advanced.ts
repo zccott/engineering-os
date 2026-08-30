@@ -283,6 +283,23 @@ test("GET /products/:id returns 404 for a missing product", async () => {
 });`,
         explanation: "This test sends an actual HTTP request through the app's real routing and middleware, checking the full response the way a real client would see it — not just one internal function.",
       },
+      {
+        title: "The same integration test, in FastAPI with pytest",
+        code: `from fastapi.testclient import TestClient
+from main import app
+
+client = TestClient(app)
+
+def test_get_existing_product():
+    response = client.get("/products/42")
+    assert response.status_code == 200
+    assert response.json()["id"] == 42
+
+def test_get_missing_product_returns_404():
+    response = client.get("/products/does-not-exist")
+    assert response.status_code == 404`,
+        explanation: "TestClient wraps the actual FastAPI app the same way supertest wraps an Express app — it sends real requests through routing, dependencies, and validation, and lets you assert on the real response, without needing a live server running somewhere.",
+      },
     ],
     howItWorks: `
 Unit tests call a function or method directly, typically supplying
@@ -334,7 +351,7 @@ unnecessary overhead.
       { question: "Why do integration tests typically run slower than unit tests?", answer: "They exercise more of the real system — routing, middleware, and often a real or realistic database — rather than a single function in isolation, so there's more work happening per test." },
     ],
     prerequisites: ["dependency-injection"],
-    relatedTopics: ["dependency-injection", "api-versioning", "deployment-and-cicd"],
+    relatedTopics: ["dependency-injection", "api-versioning", "deployment-and-cicd", "python-web-frameworks"],
     keywords: ["unit testing", "integration testing", "test doubles", "supertest"],
   },
   {
@@ -440,5 +457,154 @@ repeatedly, not for one-off work.
     prerequisites: ["testing-backend-code", "background-jobs"],
     relatedTopics: ["testing-backend-code", "env-vars-and-config"],
     keywords: ["ci/cd", "continuous integration", "continuous deployment", "deployment pipeline"],
+  },
+  {
+    id: "websockets-in-practice",
+    title: "Building with WebSockets",
+    level: "advanced",
+    description: "What actually changes on the server when a connection stays open — handling events, pushing messages, broadcasting, and what happens when a client drops.",
+    explanation: `
+A WebSocket connection is a real-time, two-way upgrade on top of a
+normal HTTP request. You don't need a whole separate subject to work
+with one — just a clear picture of a few things that are genuinely
+different from a normal request handler: the connection sticks around
+instead of closing after one response, either side can send a message
+at any moment, and your server code needs to actively track who's
+currently connected if it wants to reach more than one client at once.
+
+That means a WebSocket route isn't shaped like \`(req, res) => ...\`
+anymore — it's shaped like "a connection just opened, here's what to do
+each time a message arrives on it, and here's what to do when it
+closes."
+    `.trim(),
+    analogy:
+      "A normal API route is a phone call where you dial, ask one question, get one answer, and hang up. A WebSocket connection is more like a walkie-talkie left on: it stays open, either person can key in and speak whenever they want, and if you want to reach a whole group at once, you have to actually keep a list of everyone whose walkie-talkie is currently on.",
+    examples: [
+      {
+        title: "Connection lifecycle and messages (Node.js, the ws library)",
+        code: `const { WebSocketServer } = require("ws");
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on("connection", (socket) => {
+  console.log("client connected");
+
+  socket.on("message", (data) => {
+    console.log("received:", data.toString());
+    socket.send("ack: " + data.toString());
+  });
+
+  socket.on("close", () => {
+    console.log("client disconnected");
+  });
+});`,
+        explanation: "This is the whole lifecycle in one place: 'connection' fires once when a client connects, 'message' fires every time that specific client sends something, and 'close' fires once the connection ends — there's no single request/response pair to reason about anymore.",
+        walkthrough: [
+          { code: 'wss.on("connection", (socket) => {', explanation: "Runs once per client, handing you a socket object scoped to that one connection — everything below is specific to this one client." },
+          { code: 'socket.on("message", (data) => {', explanation: "Fires every time this client sends anything, at any point, unprompted — unlike a route handler, this isn't triggered by 'a request coming in' in the usual sense." },
+          { code: 'socket.on("close", () => {', explanation: "Fires when the connection ends, whether the client closed it deliberately, lost network access, or crashed — this is where you'd clean up anything tracked for that client." },
+        ],
+      },
+      {
+        title: "Broadcasting to every connected client",
+        code: `const clients = new Set();
+
+wss.on("connection", (socket) => {
+  clients.add(socket);
+
+  socket.on("close", () => clients.delete(socket));
+
+  socket.on("message", (data) => {
+    // send this message out to everyone else connected
+    for (const client of clients) {
+      if (client !== socket && client.readyState === client.OPEN) {
+        client.send(data.toString());
+      }
+    }
+  });
+});`,
+        explanation: "A single socket only knows about itself — reaching every connected client (like a chat room) means the server has to keep its own list of open connections and loop over it, adding and removing entries as clients connect and disconnect.",
+      },
+      {
+        title: "The same lifecycle in FastAPI",
+        code: `from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+
+app = FastAPI()
+
+@app.websocket("/ws")
+async def chat(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await websocket.send_text(f"ack: {data}")
+    except WebSocketDisconnect:
+        print("client disconnected")`,
+        explanation: "await websocket.accept() completes the upgrade, the while True loop plays the same role as the 'message' event in Node (it just runs until the client sends something, over and over), and WebSocketDisconnect is FastAPI's way of surfacing the equivalent of the 'close' event.",
+      },
+    ],
+    howItWorks: `
+Once a WebSocket connection is accepted, the server holds it open and
+both sides communicate through events rather than a single
+request/response pair: a "connected" event, repeated "message" events
+in either direction, and a "closed" event. Because the connection has
+no built-in concept of "everyone in this chat room," broadcasting is
+entirely the server's own responsibility — it has to keep some
+in-memory collection of currently-open connections and iterate over it
+to reach more than one client.
+
+**Reconnection** is the client's responsibility, not the server's: a
+dropped connection (a phone losing signal, a laptop sleeping) just
+closes the socket, and a well-behaved client detects that and calls
+\`new WebSocket(...)\` again, usually with a short backoff delay, to
+reconnect on its own. The server doesn't "resume" an old connection —
+it just sees a brand-new one arrive.
+
+**Scaling** is where WebSockets get genuinely harder than a stateless
+HTTP API: if a server keeps its list of connected clients only in its
+own memory, and you run more than one server instance behind a load
+balancer, a message from a client on server A can't reach a client
+connected to server B just by looping over server A's local list. That
+turns broadcasting into a distribution problem — every server instance
+needs to hear about every message, typically by having each instance
+publish incoming messages to a shared message broker (like Redis
+pub/sub) that every other instance is also subscribed to, and re-send
+them to its own locally connected clients.
+    `.trim(),
+    whyItExists: `
+Polling an HTTP endpoint every few seconds to check "did anything
+change?" wastes requests on "no" answers and still isn't fast enough for
+things that genuinely need to feel instant. WebSockets exist so a
+server can push a message the moment something happens, instead of
+waiting for the client to ask again.
+    `.trim(),
+    whenToUse: `
+Reach for a WebSocket for chat, live notifications, collaborative
+editing, live dashboards, or multiplayer interactions — anything where
+the server frequently has something to say before the client asks.
+    `.trim(),
+    whenNotToUse: `
+For data that only changes occasionally, or where a few seconds of
+staleness is fine, a normal request (or occasional polling) is far
+simpler to build, test, and scale than a WebSocket — don't reach for a
+persistent connection just because "real-time" sounds appealing.
+    `.trim(),
+    commonMistakes: [
+      "Forgetting to remove a client from the tracked connections list on 'close'/WebSocketDisconnect, leaking references to dead connections and eventually crashing when the server tries to send to one.",
+      "Assuming the server needs to handle reconnection — it doesn't; a dropped connection is just gone, and it's the client's job to detect that and open a new one.",
+      "Keeping the list of connected clients only in one server's memory and expecting broadcasts to reach clients connected to a different server instance behind a load balancer.",
+    ],
+    exercises: [
+      { difficulty: "Easy", prompt: "Using the ws library, write the 'connection' and 'close' handlers needed to log when clients connect and disconnect." },
+      { difficulty: "Medium", prompt: "Extend the broadcasting example so a message is echoed back to every connected client, including the sender." },
+      { difficulty: "Hard", prompt: "Explain, step by step, why running three instances of the same WebSocket server behind a load balancer breaks naive in-memory broadcasting, and what changes would be needed to fix it." },
+    ],
+    interviewQuestions: [
+      { question: "Why does broadcasting a message to all connected clients require extra work on the server, when a socket already exists for each client?", answer: "Each socket only knows about its own single connection — reaching every client requires the server to maintain its own collection of currently-open connections and iterate over it." },
+      { question: "Whose responsibility is reconnection — the client's or the server's?", answer: "The client's — a dropped connection simply closes, and a well-behaved client detects that and opens a brand-new connection, typically with a short backoff delay." },
+      { question: "Why does scaling WebSockets across multiple server instances complicate broadcasting?", answer: "Because each instance only knows about the clients connected directly to it, a message from a client on one instance can't reach a client on another instance without some shared mechanism (like a pub/sub message broker) that every instance subscribes to." },
+    ],
+    prerequisites: ["routing", "background-jobs"],
+    relatedTopics: ["routing", "middleware", "background-jobs"],
+    keywords: ["WebSocket", "real-time", "broadcasting", "reconnection", "scaling", "pub/sub", "ws", "connection lifecycle"],
   },
 ];

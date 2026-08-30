@@ -61,7 +61,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               color: "text.primary",
             }}
           >
-            Engineering OS
+            EngineeringWiki
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />

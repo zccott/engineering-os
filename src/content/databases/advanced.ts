@@ -54,6 +54,17 @@ exports.down = function (schema) {
 };`,
         explanation: "Many migration tools pair each change (up) with its exact opposite (down), so a migration can be undone cleanly if it needs to be rolled back.",
       },
+      {
+        title: "The same idea with Alembic (SQLAlchemy's migration tool)",
+        code: `# migrations/versions/a1b2c3_add_phone_number.py
+
+def upgrade():
+    op.add_column("users", sa.Column("phone_number", sa.String()))
+
+def downgrade():
+    op.drop_column("users", "phone_number")`,
+        explanation: "Alembic is the migration tool most commonly paired with SQLAlchemy/FastAPI — upgrade() and downgrade() are exactly the up/down pair from the JavaScript example, just Python syntax; running `alembic upgrade head` applies every migration not yet recorded, in order.",
+      },
     ],
     howItWorks: `
 A migration tool keeps a small table inside the database itself (often

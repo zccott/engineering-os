@@ -1,6 +1,6 @@
 # Contributing
 
-Engineering OS started as a personal learning knowledge base and is now open
+EngineeringWiki started as a personal learning knowledge base and is now open
 source. The process below applies whether that's you-in-six-months or
 someone else picking it up.
 

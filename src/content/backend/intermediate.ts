@@ -729,6 +729,37 @@ app.delete("/users/:id", async (req, res) => {
           { code: "UPDATE users SET ... WHERE id = $3 RETURNING *", explanation: "Scopes the update to exactly one row with the WHERE clause, and RETURNING * gives back the row as it looks after the change." },
         ],
       },
+      {
+        title: "Wrapping multiple queries in a transaction",
+        code: `app.post("/transfer", async (req, res) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query(
+      "UPDATE accounts SET balance = balance - $1 WHERE id = $2",
+      [req.body.amount, req.body.fromId]
+    );
+    await client.query(
+      "UPDATE accounts SET balance = balance + $1 WHERE id = $2",
+      [req.body.amount, req.body.toId]
+    );
+    await client.query("COMMIT");
+    res.status(204).end();
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+});`,
+        explanation: "A money transfer needs both updates to happen together or not at all — this checks out a single dedicated connection from the pool, runs both queries as one transaction, and rolls back entirely if either one fails, instead of risking money leaving one account without arriving in the other.",
+        walkthrough: [
+          { code: "const client = await pool.connect();", explanation: "A transaction has to run on one specific connection, not just 'the pool' in general — every query in it must use this same checked-out client." },
+          { code: 'await client.query("BEGIN");', explanation: "Starts the transaction — none of the changes that follow are permanent until COMMIT runs." },
+          { code: 'catch (err) { await client.query("ROLLBACK"); ... }', explanation: "If anything throws partway through, ROLLBACK undoes every change made since BEGIN, leaving both accounts exactly as they were." },
+          { code: "client.release();", explanation: "Always returns the connection back to the pool when done, whether the transaction succeeded or failed — otherwise pooled connections quietly leak away." },
+        ],
+      },
     ],
     howItWorks: `
 The app reads connection details (usually from an environment variable,
@@ -767,6 +798,7 @@ ORM is usually more setup than the task needs.
       "Hardcoding database credentials directly in source code instead of reading them from environment variables.",
       "Building SQL by concatenating strings with user input, opening the door to SQL injection, instead of using parameterized placeholders.",
       "Opening a brand-new database connection for every incoming request instead of reusing a connection pool, which is slow and can exhaust the database's connection limit under load.",
+      "Forgetting to call client.release() after a transaction (in every code path, including failures), which leaks a connection out of the pool until it eventually runs dry.",
     ],
     exercises: [
       { difficulty: "Easy", prompt: "Break down the pieces of the connection string postgres://app:secret@db.internal:5432/orders — host, port, user, password, and database name." },
@@ -843,6 +875,22 @@ def get_current_user(token: str):
 async def profile(user: dict = Depends(get_current_user)):
     return user`,
         explanation: "Depends() is FastAPI's equivalent of Express middleware for things like auth checks — instead of running before the handler in a chain, it's declared as a parameter the handler needs, and FastAPI resolves it before calling the route.",
+      },
+      {
+        title: "Real middleware — running for every request, unconditionally",
+        code: `import time
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.middleware("http")
+async def add_timing_header(request: Request, call_next):
+    start = time.time()
+    response = await call_next(request)
+    duration = time.time() - start
+    response.headers["X-Process-Time"] = str(duration)
+    return response`,
+        explanation: "This is FastAPI's actual middleware — closer to Express's (req, res, next) chain than Depends() is. It runs for every single request regardless of which route matches, and call_next(request) is exactly like calling next() in Express: it hands control onward and gives you a chance to act again once the response comes back.",
       },
     ],
     howItWorks: `
@@ -963,6 +1011,27 @@ app.get("/profile", requireAuth, (req, res) => {
 });`,
         explanation: "This is the requireAuth middleware referenced back in the middleware topic — it runs before the route handler and only calls next() once it has confirmed who the caller actually is.",
       },
+      {
+        title: "The same idea in FastAPI — a dependency instead of middleware",
+        code: `from fastapi import Depends, FastAPI, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+import jwt
+
+app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="invalid token")
+    return payload
+
+@app.get("/profile")
+async def profile(user: dict = Depends(get_current_user)):
+    return user`,
+        explanation: "OAuth2PasswordBearer tells FastAPI how to find the token (an Authorization: Bearer <token> header) and feeds it into get_current_user, which decodes and verifies the JWT's signature — the same protection as requireAuth, expressed as a dependency rather than a step in a middleware chain.",
+      },
     ],
     howItWorks: `
 Password-hashing algorithms (bcrypt, scrypt, argon2) are deliberately
@@ -1016,7 +1085,7 @@ authentication at all.
       { question: "What's the difference between authentication and authorization?", answer: "Authentication confirms who a user is; authorization determines what that already-authenticated user is allowed to do." },
     ],
     prerequisites: ["middleware", "validation-and-sanitization"],
-    relatedTopics: ["middleware", "error-handling-apis", "connecting-to-a-database"],
+    relatedTopics: ["middleware", "error-handling-apis", "connecting-to-a-database", "python-web-frameworks"],
     keywords: ["authentication", "password hashing", "bcrypt", "JWT", "session", "authorization", "salt"],
   },
   {
@@ -1111,6 +1180,27 @@ def delete_item(item_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"deleted": item_id}`,
         explanation: "The same four CRUD operations from SQL — Create, Read, Update, Delete — expressed through SQLAlchemy's query API instead of raw SQL text, each one wired to its own route.",
+      },
+      {
+        title: "Wrapping multiple changes in a transaction",
+        code: `@router.post("/transfer")
+def transfer(from_id: int, to_id: int, amount: int, db: Session = Depends(get_db)):
+    try:
+        sender = db.query(models.Account).filter(models.Account.id == from_id).one()
+        receiver = db.query(models.Account).filter(models.Account.id == to_id).one()
+        sender.balance -= amount
+        receiver.balance += amount
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    return {"status": "ok"}`,
+        explanation: "Both balance changes need to succeed or fail together — nothing is actually written until db.commit() runs, and if anything raises before that, db.rollback() discards both pending changes so the accounts are never left half-updated.",
+        walkthrough: [
+          { code: "sender.balance -= amount", explanation: "SQLAlchemy tracks this change on the in-memory object, but it isn't written to the database yet — it stays pending until the session is committed." },
+          { code: "db.commit()", explanation: "The point where both changes actually become permanent, together, in one transaction." },
+          { code: "except Exception: db.rollback()", explanation: "If anything fails before commit — even the second query, after the first change was already staged — this discards every pending change in the session, exactly like a SQL ROLLBACK." },
+        ],
       },
     ],
     howItWorks: `

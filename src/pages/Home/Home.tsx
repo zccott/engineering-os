@@ -22,7 +22,7 @@ export default function Home() {
   const { getRecent, getStatus, getSubjectCompletion } = useProgress();
 
   useDocumentMeta({
-    title: "Engineering OS — Learn once. Understand deeply.",
+    title: "EngineeringWiki — Learn once. Understand deeply.",
     description:
       "A free, structured software-engineering knowledge base: JavaScript, TypeScript, DSA, system design, backend, databases, and more — beginner to advanced.",
     path: "/",
@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <Box sx={{ maxWidth: 1000, mx: "auto" }}>
       <Typography variant="h1" component="h1" sx={{ mb: 1 }}>
-        Engineering OS
+        EngineeringWiki
       </Typography>
       <Typography variant="body1" sx={{ color: "text.secondary", mb: 5 }}>
         My personal software engineering knowledge base.
