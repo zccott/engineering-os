@@ -1,0 +1,235 @@
+# Engineering OS
+
+> A free, open-source software-engineering knowledge base. Every topic
+> follows the same structure: What is it? / Explain Like I'm 10 / Simple
+> Example / How It Works / Why Does This Exist? / Common Mistakes /
+> Practice / Interview Questions.
+
+Full URL list: https://engineeringwiki.vercel.app/sitemap.xml
+Source: https://github.com/rahul-aot/engineering-os
+
+## JavaScript
+
+From absolute beginner to advanced JavaScript.
+
+  - [What is JavaScript?](https://engineeringwiki.vercel.app/javascript/what-is-javascript): The programming language that makes websites interactive.
+  - [Variables](https://engineeringwiki.vercel.app/javascript/variables): A named container for storing a value your program can reuse.
+  - [Data Types](https://engineeringwiki.vercel.app/javascript/data-types): The different kinds of values JavaScript can store and work with.
+  - [Operators](https://engineeringwiki.vercel.app/javascript/operators): Symbols that perform actions on values, like math or comparisons.
+  - [Conditions](https://engineeringwiki.vercel.app/javascript/conditions): Making your code choose between different paths based on a test.
+  - [Loops](https://engineeringwiki.vercel.app/javascript/loops): Repeating an action multiple times without copy-pasting code.
+  - [Functions](https://engineeringwiki.vercel.app/javascript/functions): A reusable, named block of code that performs a specific task.
+  - [Arrays](https://engineeringwiki.vercel.app/javascript/arrays): An ordered list of values, stored in a single variable.
+  - [Objects](https://engineeringwiki.vercel.app/javascript/objects): A collection of related values, stored as named properties.
+  - [Scope](https://engineeringwiki.vercel.app/javascript/scope): The rules that decide where a variable can be used in your code.
+  - [Closures](https://engineeringwiki.vercel.app/javascript/closures): A function that remembers the variables from where it was created, even after that outer code has finished running.
+  - [Array Methods (forEach, map, filter, reduce...)](https://engineeringwiki.vercel.app/javascript/array-methods): The built-in tools for looping over, transforming, and summarizing arrays without writing manual loops.
+  - [String Methods](https://engineeringwiki.vercel.app/javascript/string-methods): The built-in tools for reading, searching, and reshaping text.
+  - [Callbacks](https://engineeringwiki.vercel.app/javascript/callbacks): A function you pass into another function, to be called later — often once some work finishes.
+  - [Higher-Order Functions](https://engineeringwiki.vercel.app/javascript/higher-order-functions): A function that takes another function as input, returns one as output, or both.
+  - [Destructuring & Spread/Rest](https://engineeringwiki.vercel.app/javascript/destructuring-and-spread): Quick ways to pull values out of arrays/objects, and to expand or collect values using ...
+  - [Promises](https://engineeringwiki.vercel.app/javascript/promises): An object that represents a value you'll get later, not right now.
+  - [Async/Await](https://engineeringwiki.vercel.app/javascript/async-await): A cleaner way to write asynchronous code so it reads like normal, step-by-step code.
+  - [Event Loop](https://engineeringwiki.vercel.app/javascript/event-loop): The mechanism that lets JavaScript handle many tasks without ever running two at once.
+  - [Prototypes](https://engineeringwiki.vercel.app/javascript/prototypes): How JavaScript objects share behavior with each other behind the scenes.
+  - [this](https://engineeringwiki.vercel.app/javascript/this): A special keyword that refers to whatever object is currently 'in charge' of the running code.
+  - [Common JavaScript Confusions](https://engineeringwiki.vercel.app/javascript/js-gotchas): A collection of surprising JavaScript behaviors that trip up almost everyone at some point.
+  - [Error Handling](https://engineeringwiki.vercel.app/javascript/error-handling): Dealing with things that go wrong in your code on purpose, instead of letting the program crash.
+  - [Modules](https://engineeringwiki.vercel.app/javascript/modules): Splitting code across multiple files, and sharing pieces between them deliberately.
+  - [Memory Management](https://engineeringwiki.vercel.app/javascript/memory-management): How JavaScript decides when a piece of data is no longer needed and can be cleaned up.
+  - [Optional Chaining & Nullish Coalescing](https://engineeringwiki.vercel.app/javascript/optional-chaining): Safely reading deeply nested properties, and providing defaults, without a pile of manual checks.
+  - [JSON](https://engineeringwiki.vercel.app/javascript/json): A simple, text-based format for representing data, used constantly to send information between programs.
+  - [Map and Set](https://engineeringwiki.vercel.app/javascript/map-and-set): Two built-in collections — Map for key-value pairs, Set for unique values — that improve on what plain objects and arrays can do.
+
+## TypeScript
+
+From basic types to advanced generics and utility types.
+
+  - [What is TypeScript?](https://engineeringwiki.vercel.app/typescript/what-is-typescript): JavaScript with an extra layer that checks the *shape* of your data before your code ever runs.
+  - [Basic Types](https://engineeringwiki.vercel.app/typescript/basic-types): The small set of built-in labels TypeScript uses to describe strings, numbers, booleans, arrays, and fixed-shape lists.
+  - [Interfaces](https://engineeringwiki.vercel.app/typescript/interfaces): A named description of what properties an object must have, and what type each one holds.
+  - [Type Aliases](https://engineeringwiki.vercel.app/typescript/type-aliases): Giving any type — not just object shapes — a reusable name.
+  - [Functions with Types](https://engineeringwiki.vercel.app/typescript/functions-with-types): Annotating a function's parameters and return value so TypeScript can check every call against them.
+  - [Union & Intersection Types](https://engineeringwiki.vercel.app/typescript/union-intersection-types): Combining types with `|` to mean "one of these" and with `&` to mean "all of these, merged."
+  - [Generics](https://engineeringwiki.vercel.app/typescript/generics): Writing a function or type once so it works with whatever type you feed it, while still keeping that type checked.
+  - [Enums](https://engineeringwiki.vercel.app/typescript/enums): A named set of related constant values, grouped under one type so you can refer to them by name instead of a raw value.
+  - [Type Narrowing](https://engineeringwiki.vercel.app/typescript/type-narrowing): How TypeScript figures out, step by step, which specific branch of a union type you're actually holding at a given point in the code.
+  - [Utility Types](https://engineeringwiki.vercel.app/typescript/utility-types): Built-in generic types that transform an existing type into a new one, so you don't have to redefine similar shapes by hand.
+  - [Classes & Access Modifiers](https://engineeringwiki.vercel.app/typescript/classes-access-modifiers): Marking a class's properties and methods as `public`, `private`, or `protected` to control what code outside the class is allowed to touch.
+  - [Mapped Types](https://engineeringwiki.vercel.app/typescript/mapped-types): Building a brand-new type by looping over every property of an existing type and transforming each one the same way.
+  - [Conditional Types](https://engineeringwiki.vercel.app/typescript/conditional-types): A type that resolves to one of two different types, chosen based on a check performed entirely at compile time.
+  - [Declaration Files (.d.ts)](https://engineeringwiki.vercel.app/typescript/declaration-files): A file that describes the shape of existing JavaScript code, without containing any actual implementation, so TypeScript can check code that uses it.
+  - [tsconfig & Strict Mode](https://engineeringwiki.vercel.app/typescript/tsconfig-strict-mode): The configuration file that controls how the TypeScript compiler behaves, and the single setting that turns on its strongest safety checks.
+
+## DSA
+
+Data structures and algorithms using JavaScript.
+
+  - [Big O](https://engineeringwiki.vercel.app/dsa/big-o): A way to describe how much slower or bigger a program gets as its input grows.
+  - [Arrays](https://engineeringwiki.vercel.app/dsa/arrays): The most fundamental way to store an ordered list of items in memory.
+  - [Strings](https://engineeringwiki.vercel.app/dsa/strings): A sequence of characters, and the special rules for working with them efficiently.
+  - [Linked Lists](https://engineeringwiki.vercel.app/dsa/linked-lists): A chain of items where each one points to the next, instead of sitting side by side in memory.
+  - [Stack](https://engineeringwiki.vercel.app/dsa/stack): A structure where the last item added is always the first one removed.
+  - [Queue](https://engineeringwiki.vercel.app/dsa/queue): A structure where the first item added is always the first one removed.
+  - [Hash Tables](https://engineeringwiki.vercel.app/dsa/hash-tables): A structure that lets you look up a value almost instantly using a key, instead of searching through everything.
+  - [Recursion](https://engineeringwiki.vercel.app/dsa/recursion): A function that solves a problem by calling itself on a smaller version of the same problem.
+  - [Binary Search](https://engineeringwiki.vercel.app/dsa/binary-search): A fast way to find a value in a sorted list by repeatedly cutting the search area in half.
+  - [Sorting](https://engineeringwiki.vercel.app/dsa/sorting): Arranging a list of items into order — and why different approaches to it matter a lot at scale.
+
+## Web Fundamentals
+
+How browsers, HTML, CSS, and the web platform actually work.
+
+  - [How the Web Works](https://engineeringwiki.vercel.app/web-fundamentals/how-the-web-works): What actually happens, step by step, between typing a web address and seeing a page appear on screen.
+  - [HTML Basics](https://engineeringwiki.vercel.app/web-fundamentals/html-basics): The language used to describe what's on a page and how it's structured — not what it looks like.
+  - [CSS Basics](https://engineeringwiki.vercel.app/web-fundamentals/css-basics): The language used to control how a page looks, kept deliberately separate from what the page contains.
+  - [The DOM](https://engineeringwiki.vercel.app/web-fundamentals/the-dom): The live, in-memory version of a page's structure that a browser builds and that JavaScript can read and change.
+  - [Browser Rendering](https://engineeringwiki.vercel.app/web-fundamentals/browser-rendering): The step-by-step process a browser follows to turn HTML and CSS into the pixels you actually see on screen.
+  - [CSS Layout (Flexbox & Grid)](https://engineeringwiki.vercel.app/web-fundamentals/css-layout): Two modern CSS tools for arranging elements on a page without relying on old workarounds like floats.
+  - [Responsive Design](https://engineeringwiki.vercel.app/web-fundamentals/responsive-design): Designing a single page so it still looks and works well on a huge range of screen sizes, from phones to large monitors.
+  - [Browser Storage](https://engineeringwiki.vercel.app/web-fundamentals/browser-storage): Different ways a website can save small pieces of data directly in the user's browser, so it's still there the next time they visit.
+  - [Web Accessibility (a11y)](https://engineeringwiki.vercel.app/web-fundamentals/web-accessibility): Designing and building a site so people using assistive technology, like screen readers or keyboard-only navigation, can actually use it.
+  - [Web Performance Basics](https://engineeringwiki.vercel.app/web-fundamentals/web-performance-basics): What actually makes a page feel slow to use, and the basic techniques for making it feel fast.
+  - [Web Security Basics](https://engineeringwiki.vercel.app/web-fundamentals/web-security-basics): Two of the most common ways attackers abuse a website's trust of its own content or its users, and why they work.
+  - [CORS](https://engineeringwiki.vercel.app/web-fundamentals/cors): Why a browser blocks a webpage from freely talking to a different website's server, and how that server can explicitly allow it.
+  - [Browser DevTools & Debugging](https://engineeringwiki.vercel.app/web-fundamentals/browser-devtools): The built-in browser tools for inspecting, debugging, and understanding exactly what a page is doing, beyond just what it shows.
+  - [Progressive Web Apps (PWA)](https://engineeringwiki.vercel.app/web-fundamentals/progressive-web-apps): What lets an ordinary website behave more like a native app — installable, working offline, and launchable from a home screen.
+
+## Backend
+
+Building the server side of an application: routing, middleware, APIs, and deployment.
+
+  - [What is Backend Development?](https://engineeringwiki.vercel.app/backend/what-is-backend): The part of an application that runs on a server rather than in the user's browser — handling logic, data, and rules the user should never see or control directly.
+  - [Servers & Web Frameworks](https://engineeringwiki.vercel.app/backend/servers-and-web-frameworks): What a web framework like Express actually does for you, versus the raw, repetitive plumbing you'd otherwise have to write by hand.
+  - [Routing](https://engineeringwiki.vercel.app/backend/routing): The way a server decides which piece of code should handle a given URL and HTTP method.
+  - [Middleware](https://engineeringwiki.vercel.app/backend/middleware): Small functions that run before a request reaches its final route handler, each able to inspect, modify, or stop the request.
+  - [Request/Response Lifecycle](https://engineeringwiki.vercel.app/backend/request-response-lifecycle): The complete journey a request takes from the moment it arrives at your server to the moment a response is sent back.
+  - [How Node.js Works](https://engineeringwiki.vercel.app/backend/nodejs-runtime): The JavaScript runtime that lets JavaScript run outside a browser, and the single-threaded, event-driven model behind it.
+  - [Backend Project Structure](https://engineeringwiki.vercel.app/backend/project-structure): The folder and file layout that keeps routes, business logic, and data access separated as a backend app grows.
+  - [npm & Package Management](https://engineeringwiki.vercel.app/backend/npm-and-packages): How Node.js projects declare, install, and lock their external dependencies using npm and package.json.
+  - [Environment Variables & Config](https://engineeringwiki.vercel.app/backend/env-vars-and-config): Keeping secrets and settings that differ between environments out of your code, so the same code can run safely in development, testing, and production.
+  - [Error Handling in APIs](https://engineeringwiki.vercel.app/backend/error-handling-apis): Catching errors in one central place and returning consistent, safe responses, instead of letting the server crash or leak internal details to callers.
+  - [Validation & Sanitization](https://engineeringwiki.vercel.app/backend/validation-and-sanitization): Checking that incoming data is well-formed and expected before your code uses it, and cleaning up anything unsafe it might contain.
+  - [File Uploads](https://engineeringwiki.vercel.app/backend/file-uploads): How a server receives a file sent from a form or client, at a conceptual level — and what happens to it once it arrives.
+  - [Logging](https://engineeringwiki.vercel.app/backend/logging): Recording what a running server is doing in a structured, searchable way, so problems can be understood after the fact instead of only while watching a terminal.
+  - [Background Jobs](https://engineeringwiki.vercel.app/backend/background-jobs): Running work outside the normal request/response cycle, so a slow task doesn't force a user to sit and wait for it to finish.
+  - [Connecting to a Database](https://engineeringwiki.vercel.app/backend/connecting-to-a-database): The different ways backend code can talk to a database — raw drivers, query builders, and ORMs — and how a connection is actually established.
+  - [FastAPI & Python Web Frameworks](https://engineeringwiki.vercel.app/backend/python-web-frameworks): How backend concepts like routing and middleware look in Python, using FastAPI as an example of a modern, async, type-driven framework.
+  - [Authentication & Password Hashing](https://engineeringwiki.vercel.app/backend/authentication-and-passwords): How a backend verifies who's making a request — never storing raw passwords, and remembering that someone is logged in across future requests.
+  - [FastAPI Project Structure & Database CRUD](https://engineeringwiki.vercel.app/backend/fastapi-database-and-crud): How a real FastAPI project is split into files, connects to a database with SQLAlchemy, and exposes full CRUD endpoints.
+  - [API Versioning](https://engineeringwiki.vercel.app/backend/api-versioning): How to change an API's shape over time without breaking the other applications and clients already relying on it.
+  - [Dependency Injection](https://engineeringwiki.vercel.app/backend/dependency-injection): Handing a function or class the things it needs from outside, rather than letting it create those things itself — making it far easier to swap or test.
+  - [Testing Backend Code](https://engineeringwiki.vercel.app/backend/testing-backend-code): The difference between checking one small piece of logic in isolation and checking that a real request flows correctly through the whole app.
+  - [Deployment & CI/CD Basics](https://engineeringwiki.vercel.app/backend/deployment-and-cicd): What actually happens between pushing a code change and that change running live for real users, at a conceptual level.
+
+## Databases
+
+Hands-on database skills: SQL, schema design, indexing, and working with an ORM.
+
+  - [What is a Database?](https://engineeringwiki.vercel.app/databases/what-is-a-database): A system that stores your data in an organized shape you can search, filter, and change directly — not just a file you save data into.
+  - [Tables, Rows & Columns](https://engineeringwiki.vercel.app/databases/tables-rows-columns): The basic grid shape — like a spreadsheet — that relational databases use to organize data.
+  - [Primary Keys & Foreign Keys](https://engineeringwiki.vercel.app/databases/primary-and-foreign-keys): How a database uniquely identifies one specific row, and how rows in different tables point to each other.
+  - [Basic SQL Queries](https://engineeringwiki.vercel.app/databases/basic-sql-queries): The four core commands — SELECT, INSERT, UPDATE, DELETE — used to read and change data in a database.
+  - [Filtering & Sorting](https://engineeringwiki.vercel.app/databases/filtering-and-sorting): Narrowing a query down to the rows you actually want with WHERE, and controlling the order results come back in with ORDER BY.
+  - [Joins](https://engineeringwiki.vercel.app/databases/joins): Combining matching rows from two or more tables into a single set of results, using the foreign keys that link them.
+  - [Aggregation](https://engineeringwiki.vercel.app/databases/aggregation): Collapsing many rows down into a single summary value — a count, a total, an average — instead of listing every individual row.
+  - [Indexes](https://engineeringwiki.vercel.app/databases/indexes): A separate lookup structure the database maintains so it can jump straight to matching rows instead of scanning the whole table.
+  - [Normalization](https://engineeringwiki.vercel.app/databases/normalization): Organizing tables so each piece of information is stored in exactly one place, instead of copied and repeated everywhere it's needed.
+  - [Transactions & ACID](https://engineeringwiki.vercel.app/databases/transactions-and-acid): Grouping several database operations into one all-or-nothing unit, so a failure partway through never leaves data half-changed.
+  - [ORMs](https://engineeringwiki.vercel.app/databases/orms): A library that lets application code work with database rows as regular objects, generating SQL behind the scenes instead of you writing it by hand.
+  - [PostgreSQL in Depth](https://engineeringwiki.vercel.app/databases/postgresql-deep-dive): The PostgreSQL-specific features beyond standard SQL — richer data types, auto-incrementing ids, and the psql command-line client.
+  - [Subqueries & CTEs](https://engineeringwiki.vercel.app/databases/subqueries-and-ctes): Nesting one query inside another, or naming a step with WITH, to break a complex question into smaller, readable pieces.
+  - [Pagination](https://engineeringwiki.vercel.app/databases/pagination): Returning a large result set in smaller pages instead of all at once, using LIMIT/OFFSET or a keyset approach.
+  - [Database Migrations](https://engineeringwiki.vercel.app/databases/database-migrations): Small, versioned scripts that change a database's schema over time, so every environment ends up with the same structure in the same order.
+  - [Query Optimization](https://engineeringwiki.vercel.app/databases/query-optimization): Reading what a database actually plans to do to execute a query, and using that to figure out why it's slow and how to speed it up.
+  - [Connection Pooling](https://engineeringwiki.vercel.app/databases/connection-pooling): Keeping a small set of already-open database connections ready to reuse, instead of opening (and closing) a brand-new one for every request.
+  - [NoSQL Data Modeling](https://engineeringwiki.vercel.app/databases/nosql-data-modeling): Designing the shape of a document to match how it'll actually be read, often by embedding related data together instead of splitting it across normalized tables.
+  - [Window Functions](https://engineeringwiki.vercel.app/databases/window-functions): Calculations across a set of related rows — like a running total or a rank — without collapsing them into a single row the way GROUP BY does.
+  - [Upsert & Conflict Handling](https://engineeringwiki.vercel.app/databases/upsert-and-conflicts): Inserting a row, or updating it instead if it already exists, in a single atomic statement.
+
+## System Design
+
+Understand how real-world software systems are designed.
+
+  - [What is System Design?](https://engineeringwiki.vercel.app/system-design/what-is-system-design): Planning how the different parts of a real software system fit together and work at scale.
+  - [Client and Server](https://engineeringwiki.vercel.app/system-design/client-and-server): The basic relationship between the app you use and the machine that does the real work behind it.
+  - [HTTP](https://engineeringwiki.vercel.app/system-design/http): The common language that lets clients and servers talk to each other over the web.
+  - [REST APIs](https://engineeringwiki.vercel.app/system-design/rest-apis): A common, predictable way to structure requests so different apps can talk to a server the same way.
+  - [Proxy & Reverse Proxy](https://engineeringwiki.vercel.app/system-design/proxy-and-reverse-proxy): A middle server that sits between a client and the real destination, on behalf of one side or the other.
+  - [Authentication & Sessions](https://engineeringwiki.vercel.app/system-design/authentication-and-sessions): How a server remembers who you are across multiple requests, even though HTTP itself doesn't.
+  - [Databases](https://engineeringwiki.vercel.app/system-design/databases): Where an application's data actually lives, safely, between requests.
+  - [SQL vs NoSQL](https://engineeringwiki.vercel.app/system-design/sql-vs-nosql): Two different philosophies for organizing and storing data, each suited to different problems.
+  - [Caching](https://engineeringwiki.vercel.app/system-design/caching): Keeping a copy of frequently-needed data somewhere much faster to access, so you don't redo expensive work every time.
+  - [Database Replication](https://engineeringwiki.vercel.app/system-design/database-replication): Keeping multiple copies of the same database in sync, so no single database is a single point of failure.
+  - [Database Sharding](https://engineeringwiki.vercel.app/system-design/sharding): Splitting one huge dataset across multiple databases, so no single database has to hold all of it.
+  - [Consistency Models](https://engineeringwiki.vercel.app/system-design/consistency-models): How quickly, and how strictly, every copy of your data has to agree with every other copy.
+  - [Rate Limiting](https://engineeringwiki.vercel.app/system-design/rate-limiting): Deliberately capping how many requests a client can make in a given time window.
+  - [Microservices vs Monolith](https://engineeringwiki.vercel.app/system-design/microservices-vs-monolith): Two different ways to structure an application's codebase and deployment — as one unit, or as many independent pieces.
+  - [Publish/Subscribe (Pub/Sub)](https://engineeringwiki.vercel.app/system-design/pub-sub): Letting one event be broadcast to many interested listeners, without the sender needing to know who they are.
+  - [Load Balancing](https://engineeringwiki.vercel.app/system-design/load-balancing): Spreading incoming requests across multiple servers so no single one gets overwhelmed.
+  - [Queues](https://engineeringwiki.vercel.app/system-design/queues): Letting one part of a system hand off work to be done later, without waiting around for it.
+  - [CDN](https://engineeringwiki.vercel.app/system-design/cdn): A network of servers around the world that deliver content from the location closest to each user.
+  - [Scalability](https://engineeringwiki.vercel.app/system-design/scalability): A system's ability to keep working well as usage grows — more users, more data, more requests.
+  - [CAP Theorem](https://engineeringwiki.vercel.app/system-design/cap-theorem): A rule that says a distributed system can't fully guarantee consistency and availability at the same time during a network problem.
+  - [Consistent Hashing](https://engineeringwiki.vercel.app/system-design/consistent-hashing): A hashing technique that keeps most data in place even when servers are added or removed.
+  - [API Gateway](https://engineeringwiki.vercel.app/system-design/api-gateway): A single entry point in front of many backend services, handling shared concerns so each service doesn't have to.
+  - [WebSockets & Real-Time Communication](https://engineeringwiki.vercel.app/system-design/websockets): A way for a server to push data to a client the moment something happens, instead of waiting for the client to ask.
+  - [Circuit Breaker & Retries](https://engineeringwiki.vercel.app/system-design/circuit-breaker): Protecting a system from a failing dependency, instead of letting that failure cascade everywhere.
+  - [Idempotency](https://engineeringwiki.vercel.app/system-design/idempotency): Designing an operation so that doing it more than once has the exact same effect as doing it once.
+  - [Monitoring & Observability](https://engineeringwiki.vercel.app/system-design/monitoring-and-observability): Being able to tell what your system is actually doing, and why something went wrong, without guessing.
+
+## Software Architecture
+
+Principles and patterns for structuring a codebase and a system as a whole.
+
+  - [What is Software Architecture?](https://engineeringwiki.vercel.app/software-architecture/what-is-software-architecture): The high-level decisions about how a codebase is organized and how its pieces fit together — decided before a single function gets written.
+  - [Separation of Concerns](https://engineeringwiki.vercel.app/software-architecture/separation-of-concerns): Keeping different responsibilities — like displaying data, fetching it, and validating it — in different places instead of tangled together.
+  - [Coupling & Cohesion](https://engineeringwiki.vercel.app/software-architecture/coupling-and-cohesion): How tightly pieces of code depend on each other (coupling) versus how well a single piece of code focuses on one clear job (cohesion).
+  - [Layered Architecture](https://engineeringwiki.vercel.app/software-architecture/layered-architecture): Organizing code into layers — like presentation, business logic, and data access — where each layer only talks to the one next to it.
+  - [SOLID Principles](https://engineeringwiki.vercel.app/software-architecture/solid-principles): Five plain-language guidelines for keeping object-oriented code flexible and easy to change, bundled together under one acronym.
+  - [Dependency Inversion](https://engineeringwiki.vercel.app/software-architecture/dependency-inversion): Making important code depend on an abstraction — an interface describing what it needs — instead of on one specific, concrete implementation.
+  - [Clean Architecture / Hexagonal Architecture](https://engineeringwiki.vercel.app/software-architecture/clean-architecture): Keeping business logic independent of frameworks, databases, and UI, so any of those can be swapped without touching the core logic.
+  - [Domain-Driven Design (DDD) Basics](https://engineeringwiki.vercel.app/software-architecture/domain-driven-design-basics): Organizing code around the real-world business concepts it models — entities, value objects, and a shared vocabulary with domain experts — rather than around technical convenience.
+  - [Monorepo vs Polyrepo](https://engineeringwiki.vercel.app/software-architecture/monorepo-vs-polyrepo): Deciding whether to keep multiple projects or packages in one shared repository, or spread across separate repositories, and weighing the tradeoffs.
+  - [Event Sourcing & CQRS](https://engineeringwiki.vercel.app/software-architecture/event-sourcing-and-cqrs): Storing every change that happened instead of just the current state, and separating the model used to write data from the model used to read it.
+  - [Architectural Decision Records (ADRs)](https://engineeringwiki.vercel.app/software-architecture/architectural-decision-records): Writing down significant architecture decisions and the reasoning behind them, so future maintainers understand why a choice was made, not just what was chosen.
+  - [Technical Debt](https://engineeringwiki.vercel.app/software-architecture/technical-debt): The tradeoff between shipping a faster, less-ideal solution now and the ongoing cost of maintaining or fixing it later — much like financial debt.
+  - [Anti-Corruption Layer](https://engineeringwiki.vercel.app/software-architecture/anti-corruption-layer): A translation layer that protects your system's clean internal model from a messy or incompatible external system, so its quirks don't leak inward.
+
+## Real System Designs
+
+Full worked system design walkthroughs for real products (requirements,
+capacity estimation, high-level design, deep dives, trade-offs).
+
+- [URL Shortener](https://engineeringwiki.vercel.app/case-studies/url-shortener): Turn a long URL into a short code that redirects back to it — the classic first system design interview question.
+- [Instagram](https://engineeringwiki.vercel.app/case-studies/instagram): Design a photo-sharing social network: users post images, follow other users, and see a personalized feed of posts from the people they follow.
+- [Twitter / X](https://engineeringwiki.vercel.app/case-studies/twitter): Design a microblogging platform: users post short messages ('tweets'), follow other users, and see a timeline of tweets from the people they follow.
+- [WhatsApp](https://engineeringwiki.vercel.app/case-studies/whatsapp): Design a real-time messaging system: one-to-one and group chats with reliable delivery, delivery/read receipts, and end-to-end encryption.
+- [Uber](https://engineeringwiki.vercel.app/case-studies/uber): Design a ride-hailing system: riders request a trip, nearby drivers get matched to them in real time, and both sides track the trip's location and price live.
+- [YouTube](https://engineeringwiki.vercel.app/case-studies/youtube): Design a video platform where anyone can upload a video and anyone else can watch it instantly, at whatever quality their connection supports.
+- [Google Drive](https://engineeringwiki.vercel.app/case-studies/google-drive): Design a cloud file storage and sync service: upload any file, access it from any device, share it with others, and have edits stay consistent even when made offline or from multiple places at once.
+- [E-commerce Platform](https://engineeringwiki.vercel.app/case-studies/ecommerce): Design an online storefront: browse and search a catalog, hold items in a cart, and check out reliably — without overselling inventory or charging a customer twice.
+- [Netflix](https://engineeringwiki.vercel.app/case-studies/netflix): Design a subscription video-streaming service: a fixed, licensed catalog watched by tens of millions of people simultaneously, on every device, with playback that resumes exactly where you left off.
+
+## DSA Practice Problems
+
+Practice problems grouped by pattern, at https://engineeringwiki.vercel.app/problems.
+
+- [Arrays & Hashing](https://engineeringwiki.vercel.app/problems/arrays-hashing): Using arrays and hash tables to track, count, and look up values fast.
+- [Two Pointers](https://engineeringwiki.vercel.app/problems/two-pointers): Walking two positions through a sequence at once, often from both ends inward.
+- [Sliding Window](https://engineeringwiki.vercel.app/problems/sliding-window): Growing and shrinking a window over a sequence to track a running condition.
+- [Stack](https://engineeringwiki.vercel.app/problems/stack): Using last-in-first-out order to match, undo, or track nested structure.
+- [Binary Search](https://engineeringwiki.vercel.app/problems/binary-search): Cutting a sorted (or sorted-like) search space in half, repeatedly.
+- [Linked List](https://engineeringwiki.vercel.app/problems/linked-list): Rewiring pointers between nodes instead of shifting array elements.
+- [Trees](https://engineeringwiki.vercel.app/problems/trees): Traversing and reasoning about hierarchical, branching structures.
+- [Tries](https://engineeringwiki.vercel.app/problems/tries): A tree specialized for storing and searching sequences, like words.
+- [Heap / Priority Queue](https://engineeringwiki.vercel.app/problems/heap): Always having fast access to the smallest or largest remaining item.
+- [Backtracking](https://engineeringwiki.vercel.app/problems/backtracking): Exploring choices one at a time, undoing ones that don't pan out.
+- [Graphs](https://engineeringwiki.vercel.app/problems/graphs): Modeling and traversing networks of connected nodes.
+- [Advanced Graphs](https://engineeringwiki.vercel.app/problems/advanced-graphs): Shortest paths, minimum spanning trees, and topological ordering.
+- [1-D Dynamic Programming](https://engineeringwiki.vercel.app/problems/dp-1d): Building up an answer from smaller subproblems along one dimension.
+- [2-D Dynamic Programming](https://engineeringwiki.vercel.app/problems/dp-2d): The same idea as 1-D DP, tracked across two dimensions at once.
+- [Greedy](https://engineeringwiki.vercel.app/problems/greedy): Making the locally best choice at each step and trusting it works out.
+- [Intervals](https://engineeringwiki.vercel.app/problems/intervals): Comparing and merging ranges that may overlap.
+- [Math & Geometry](https://engineeringwiki.vercel.app/problems/math-geometry): Problems that lean on numeric reasoning or 2D grid geometry.
+- [Bit Manipulation](https://engineeringwiki.vercel.app/problems/bit-manipulation): Working with the individual binary bits inside a number.

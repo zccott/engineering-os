@@ -2,7 +2,15 @@
 // All learning content (JavaScript, DSA, System Design) is described
 // using these shapes, so pages/components never hardcode subject content.
 
-export type SubjectId = "javascript" | "dsa" | "system-design";
+export type SubjectId =
+  | "javascript"
+  | "dsa"
+  | "system-design"
+  | "typescript"
+  | "web-fundamentals"
+  | "backend"
+  | "databases"
+  | "software-architecture";
 
 export type TopicLevel = "beginner" | "intermediate" | "advanced";
 

@@ -1,7 +1,16 @@
 # Contributing
 
-Engineering OS is a personal learning knowledge base, but the process below
-applies whether that's you-in-six-months or someone else picking it up.
+Engineering OS started as a personal learning knowledge base and is now open
+source. The process below applies whether that's you-in-six-months or
+someone else picking it up.
+
+By participating, you're expected to follow the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
+- **Found a bug or something inaccurate?** Open an issue using the bug
+  report or content-request template.
+- **Want to add a topic or fix one?** See the section below, then open a PR
+  — the PR template has a checklist.
 
 ## Setup
 

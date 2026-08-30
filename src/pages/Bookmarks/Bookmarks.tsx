@@ -5,11 +5,19 @@ import Chip from "@mui/material/Chip";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import { getSubject, getTopic } from "../../content";
 import { useBookmarks } from "../../hooks/useBookmarks";
+import { useDocumentMeta } from "../../hooks/useDocumentMeta";
 
 /** Topics the user has bookmarked for later, read from localStorage. */
 export default function Bookmarks() {
   const { bookmarks } = useBookmarks();
   const navigate = useNavigate();
+
+  useDocumentMeta({
+    title: "Bookmarks",
+    description: "Topics you've saved to come back to later, stored locally in your browser.",
+    path: "/bookmarks",
+    noindex: true,
+  });
 
   return (
     <Box sx={{ maxWidth: 900, mx: "auto" }}>

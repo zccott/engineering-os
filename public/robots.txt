@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /progress
+Disallow: /bookmarks
+
+Sitemap: https://engineeringwiki.vercel.app/sitemap.xml

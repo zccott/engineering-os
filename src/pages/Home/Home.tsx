@@ -7,6 +7,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { subjects, getTopic } from "../../content";
 import { subjectMeta } from "../../content/subjectMeta";
 import { useProgress } from "../../hooks/useProgress";
+import { useDocumentMeta } from "../../hooks/useDocumentMeta";
 import type { ProgressStatus } from "../../types/content";
 
 const STATUS_LABEL: Record<ProgressStatus, string> = {
@@ -19,6 +20,13 @@ const STATUS_LABEL: Record<ProgressStatus, string> = {
 export default function Home() {
   const navigate = useNavigate();
   const { getRecent, getStatus, getSubjectCompletion } = useProgress();
+
+  useDocumentMeta({
+    title: "Engineering OS — Learn once. Understand deeply.",
+    description:
+      "A free, structured software-engineering knowledge base: JavaScript, TypeScript, DSA, system design, backend, databases, and more — beginner to advanced.",
+    path: "/",
+  });
 
   const recent = getRecent(3);
 

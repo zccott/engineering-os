@@ -25,6 +25,8 @@ import { useBookmarks } from "../../hooks/useBookmarks";
 import { getAdjacentTopics } from "../../content";
 import { getProblemCategoriesForTopic } from "../../content/dsaProblemLinks";
 import { getCategory, getProblemCount } from "../../content/problems";
+import { getCaseStudiesForTopic } from "../../content/case-studies";
+import DomainOutlinedIcon from "@mui/icons-material/DomainOutlined";
 import type { Subject, Topic } from "../../types/content";
 
 interface TopicPageProps {
@@ -122,6 +124,8 @@ export default function TopicPage({ subject, topic }: TopicPageProps) {
           .map((id) => getCategory(id))
           .filter((c): c is NonNullable<typeof c> => Boolean(c))
       : [];
+  const relatedCaseStudies =
+    subject.id === "system-design" ? getCaseStudiesForTopic(topic.id) : [];
 
   return (
     <Box sx={{ maxWidth: 850, mx: "auto" }}>
@@ -306,6 +310,39 @@ export default function TopicPage({ subject, topic }: TopicPageProps) {
                   size="small"
                   variant="outlined"
                 />
+              </Box>
+            ))}
+          </Box>
+        </>
+      )}
+
+      {relatedCaseStudies.length > 0 && (
+        <>
+          <SectionHeading>Real-World Examples</SectionHeading>
+          <Typography variant="body2" sx={{ color: "text.secondary", mb: 1.5 }}>
+            See this idea used in a full system design walkthrough.
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {relatedCaseStudies.map((caseStudy) => (
+              <Box
+                key={caseStudy.id}
+                onClick={() => navigate(`/case-studies/${caseStudy.id}`)}
+                sx={{
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 1.5,
+                  p: 1.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  cursor: "pointer",
+                  "&:hover": { borderColor: "primary.main" },
+                }}
+              >
+                <DomainOutlinedIcon fontSize="small" sx={{ color: "text.secondary", flexShrink: 0 }} />
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  Design {caseStudy.title}
+                </Typography>
               </Box>
             ))}
           </Box>

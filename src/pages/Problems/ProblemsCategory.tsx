@@ -11,11 +11,18 @@ import { getCategory, getProblemsByCategory } from "../../content/problems";
 import { getDsaTopicsForProblemCategory } from "../../content/dsaProblemLinks";
 import { getTopic } from "../../content";
 import ProblemList from "../../components/ProblemList/ProblemList";
+import { useDocumentMeta } from "../../hooks/useDocumentMeta";
 
 export default function ProblemsCategory() {
   const { categoryId } = useParams<{ categoryId: string }>();
   const category = categoryId ? getCategory(categoryId) : undefined;
   const navigate = useNavigate();
+
+  useDocumentMeta({
+    title: category ? `${category.title} Problems` : "Problems",
+    description: category?.description ?? "",
+    path: `/problems/${categoryId ?? ""}`,
+  });
 
   if (!category) {
     return <Navigate to="/problems" replace />;

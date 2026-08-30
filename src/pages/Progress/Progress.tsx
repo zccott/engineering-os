@@ -5,10 +5,18 @@ import { subjectMeta } from "../../content/subjectMeta";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import TopicList from "../../components/TopicList/TopicList";
 import { useProgress } from "../../hooks/useProgress";
+import { useDocumentMeta } from "../../hooks/useDocumentMeta";
 
 /** Overview of completion across every subject. */
 export default function Progress() {
   const { getSubjectCompletion } = useProgress();
+
+  useDocumentMeta({
+    title: "Progress",
+    description: "Your local, browser-only progress across every subject.",
+    path: "/progress",
+    noindex: true,
+  });
 
   return (
     <Box sx={{ maxWidth: 900, mx: "auto" }}>

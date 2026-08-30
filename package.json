@@ -3,10 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Learn once. Understand deeply. Never start from zero again. A personal, content-driven software-engineering knowledge base.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahul-aot/engineering-os.git"
+  },
+  "homepage": "https://github.com/rahul-aot/engineering-os#readme",
+  "bugs": {
+    "url": "https://github.com/rahul-aot/engineering-os/issues"
+  },
   "scripts": {
-    "start" : "vite",
+    "start": "vite",
     "dev": "vite",
+    "prebuild": "tsx scripts/generate-seo-files.ts",
     "build": "tsc -b && vite build",
+    "generate:seo": "tsx scripts/generate-seo-files.ts",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -25,6 +37,7 @@
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
     "oxlint": "^1.79.0",
+    "tsx": "^4.23.13",
     "typescript": "~6.0.2",
     "vite": "^8.2.2"
   }

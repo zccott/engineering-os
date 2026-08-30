@@ -1,9 +1,16 @@
 # Engineering OS
 
+[![CI](https://github.com/rahul-aot/engineering-os/actions/workflows/ci.yml/badge.svg)](https://github.com/rahul-aot/engineering-os/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 > Learn once. Understand deeply. Never start from zero again.
 
-A minimal, personal software-engineering knowledge base — structured lessons in
-JavaScript, DSA, and System Design, from beginner to advanced.
+A minimal, community-driven software-engineering knowledge base — structured
+lessons in JavaScript, DSA, and System Design, from beginner to advanced.
+
+It started as a personal project and is now open source — contributions of
+new topics, corrections, and features are welcome.
 
 ## Stack
 
@@ -38,3 +45,15 @@ relevant `content/<subject>/<level>.ts` file — no component changes needed.
 - `npm run dev` — start the dev server
 - `npm run build` — typecheck and build for production
 - `npm run lint` — run oxlint
+
+## Contributing
+
+Contributions are welcome — especially new topics and corrections to
+existing ones. See [CONTRIBUTING.md](CONTRIBUTING.md) for the setup steps and
+content conventions, and [AGENTS.md](AGENTS.md) for the fuller architecture
+notes (also used by AI coding agents working in this repo). Please also read
+the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## License
+
+[MIT](LICENSE)

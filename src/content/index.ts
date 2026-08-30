@@ -1,18 +1,33 @@
 import type { Subject, SubjectId, Topic } from "../types/content";
 import { javascriptSubject } from "./javascript";
+import { typescriptSubject } from "./typescript";
 import { dsaSubject } from "./dsa";
+import { webFundamentalsSubject } from "./web-fundamentals";
+import { backendSubject } from "./backend";
+import { databasesSubject } from "./databases";
 import { systemDesignSubject } from "./system-design";
+import { softwareArchitectureSubject } from "./software-architecture";
 
 export const subjects: Subject[] = [
   javascriptSubject,
+  typescriptSubject,
   dsaSubject,
+  webFundamentalsSubject,
+  backendSubject,
+  databasesSubject,
   systemDesignSubject,
+  softwareArchitectureSubject,
 ];
 
 const subjectsById: Record<SubjectId, Subject> = {
   javascript: javascriptSubject,
+  typescript: typescriptSubject,
   dsa: dsaSubject,
+  "web-fundamentals": webFundamentalsSubject,
+  backend: backendSubject,
+  databases: databasesSubject,
   "system-design": systemDesignSubject,
+  "software-architecture": softwareArchitectureSubject,
 };
 
 export function getSubject(id: string): Subject | undefined {
@@ -56,4 +71,13 @@ export function getAdjacentTopics(
   };
 }
 
-export { javascriptSubject, dsaSubject, systemDesignSubject };
+export {
+  javascriptSubject,
+  typescriptSubject,
+  dsaSubject,
+  webFundamentalsSubject,
+  backendSubject,
+  databasesSubject,
+  systemDesignSubject,
+  softwareArchitectureSubject,
+};

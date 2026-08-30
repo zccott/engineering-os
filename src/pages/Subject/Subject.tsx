@@ -5,11 +5,18 @@ import { getSubject } from "../../content";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import TopicList from "../../components/TopicList/TopicList";
 import { useProgress } from "../../hooks/useProgress";
+import { useDocumentMeta } from "../../hooks/useDocumentMeta";
 
 export default function Subject() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const subject = subjectId ? getSubject(subjectId) : undefined;
   const { getSubjectCompletion } = useProgress();
+
+  useDocumentMeta({
+    title: subject?.title ?? "Subject",
+    description: subject?.description ?? "",
+    path: `/${subjectId ?? ""}`,
+  });
 
   if (!subject) {
     return <Navigate to="/" replace />;

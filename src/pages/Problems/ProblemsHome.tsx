@@ -3,11 +3,19 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { problemCategories, getProblemsByCategory } from "../../content/problems";
 import { useProblemProgress } from "../../hooks/useProblemProgress";
+import { useDocumentMeta } from "../../hooks/useDocumentMeta";
 
 /** Overview of every problem category — the DSA practice bank's home page. */
 export default function ProblemsHome() {
   const navigate = useNavigate();
   const { getCategorySolvedCount } = useProblemProgress();
+
+  useDocumentMeta({
+    title: "DSA Practice Problems",
+    description:
+      "Practice DSA problems organized by pattern — arrays and hashing, two pointers, graphs, dynamic programming, and more.",
+    path: "/problems",
+  });
 
   return (
     <Box sx={{ maxWidth: 900, mx: "auto" }}>

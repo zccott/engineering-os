@@ -9,6 +9,8 @@ import Bookmarks from "../pages/Bookmarks/Bookmarks";
 import ProblemsHome from "../pages/Problems/ProblemsHome";
 import ProblemsCategory from "../pages/Problems/ProblemsCategory";
 import ProblemDetail from "../pages/Problems/ProblemDetail";
+import CaseStudiesHome from "../pages/CaseStudies/CaseStudiesHome";
+import CaseStudyDetail from "../pages/CaseStudies/CaseStudyDetail";
 
 export default function AppRouter() {
   return (
@@ -22,6 +24,8 @@ export default function AppRouter() {
           <Route path="/problems" element={<ProblemsHome />} />
           <Route path="/problems/:categoryId" element={<ProblemsCategory />} />
           <Route path="/problems/:categoryId/:problemId" element={<ProblemDetail />} />
+          <Route path="/case-studies" element={<CaseStudiesHome />} />
+          <Route path="/case-studies/:caseStudyId" element={<CaseStudyDetail />} />
           <Route path="/:subjectId" element={<Subject />} />
           <Route path="/:subjectId/:topicId" element={<Topic />} />
         </Route>

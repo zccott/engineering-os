@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ChecklistOutlinedIcon from "@mui/icons-material/ChecklistOutlined";
+import DomainOutlinedIcon from "@mui/icons-material/DomainOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import { subjects } from "../../content";
@@ -130,6 +131,12 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
           label="Problems"
           active={isActive("/problems")}
           onClick={() => go("/problems")}
+        />
+        <NavRow
+          icon={<DomainOutlinedIcon fontSize="small" />}
+          label="Real System Designs"
+          active={isActive("/case-studies")}
+          onClick={() => go("/case-studies")}
         />
       </List>
 
