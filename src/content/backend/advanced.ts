@@ -298,6 +298,7 @@ def test_get_existing_product():
 def test_get_missing_product_returns_404():
     response = client.get("/products/does-not-exist")
     assert response.status_code == 404`,
+        language: "python",
         explanation: "TestClient wraps the actual FastAPI app the same way supertest wraps an Express app — it sends real requests through routing, dependencies, and validation, and lets you assert on the real response, without needing a live server running somewhere.",
       },
     ],
@@ -389,6 +390,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm test`,
+        language: "yaml",
         explanation: "Every time code is pushed, this pipeline automatically installs dependencies, builds the project, and runs the test suite — without anyone needing to remember to do it manually.",
         walkthrough: [
           { code: "on: [push]", explanation: "Defines the trigger: this pipeline runs automatically every time new code is pushed, with no manual step needed to kick it off." },
@@ -406,6 +408,7 @@ jobs:
     needs: test   # only runs if the "test" job succeeded
     steps:
       - run: ./deploy.sh production`,
+        language: "yaml",
         explanation: "The deploy job is deliberately gated on the test job succeeding first, so broken code never gets a chance to reach production.",
       },
     ],
@@ -539,6 +542,7 @@ async def chat(websocket: WebSocket):
             await websocket.send_text(f"ack: {data}")
     except WebSocketDisconnect:
         print("client disconnected")`,
+        language: "python",
         explanation: "await websocket.accept() completes the upgrade, the while True loop plays the same role as the 'message' event in Node (it just runs until the client sends something, over and over), and WebSocketDisconnect is FastAPI's way of surfacing the equivalent of the 'close' event.",
       },
     ],

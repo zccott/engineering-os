@@ -32,6 +32,7 @@ built for exactly that purpose.
         code: `SELECT name, email
 FROM users
 WHERE signed_up_at > '2026-01-01';`,
+        language: "sql",
         explanation: "This is a real query, not pseudocode. It asks the database directly for every user who signed up after a certain date — the database handles the searching.",
         walkthrough: [
           { code: "SELECT name, email", explanation: "Says which pieces of information you want back — just the name and email, not everything." },
@@ -94,8 +95,18 @@ in-memory variable is simpler and a database is unnecessary overhead.
     ],
     interviewQuestions: [
       { question: "What is a database, in plain terms?", answer: "Software that stores data in an organized, structured way and provides a query language to search, filter, and modify that data directly, rather than requiring you to scan through it manually." },
-      { question: "Why not just store application data in a plain text file?", answer: "Plain files don't offer fast searching, don't safely handle multiple simultaneous writers, and require custom code for every new kind of question — a database solves all three." },
-      { question: "What language do most relational databases use to ask questions of the data?", answer: "SQL (Structured Query Language)." },
+      { question: "Why not just store application data in a plain text file?", answer: "Plain files don't offer fast searching (you'd scan the whole file for every question), don't safely handle multiple simultaneous writers (two processes writing at once can corrupt the file), and require brand-new custom code for every new kind of question — a database solves all three by understanding the data's structure and providing a shared query language." },
+      { question: "What's the difference between a database and a spreadsheet file like Excel?", answer: "A spreadsheet is a single file with no query language and no safe way for multiple people to write to it at the same time — 'querying' it means manually filtering or scrolling. A database is a running piece of software that understands the structure of the data and lets many clients read and write concurrently through a standard query language like SQL." },
+      { question: "What does it mean to *query* a database, as opposed to just reading data from it?", answer: "Querying means describing *what* result you want — 'every order from Amara, sorted by date' — and letting the database figure out *how* to find it, rather than your own code opening the data and manually looping through it to find matches." },
+      { question: "Why can a database search millions of rows faster than application code scanning them one by one?", answer: "The database understands the data's structure (types, relationships) and can use techniques like indexes to jump toward matching rows instead of checking every one; application code manually looping through raw data has no such shortcut unless it reimplements one itself." },
+      { question: "What is SQL, and why does it matter that so many different databases understand it?", answer: "SQL (Structured Query Language) is a standardized language for describing what data you want or how you want to change it. Because most relational databases understand it (with minor dialect differences), the skills and even much of the query code transfer across products like PostgreSQL, MySQL, and SQLite." },
+      { question: "You're building a to-do list app. What kind of data belongs in a database rather than just in application variables?", answer: "Anything that needs to survive after the app closes and be found again later — the tasks themselves, their completed/incomplete status, due dates — because a database persists data between runs and lets you query it later ('show me all incomplete tasks'), which a variable in memory can't do." },
+      { question: "A teammate says a small app can just keep all its data in an in-memory array instead of a database. What breaks first as that app grows?", answer: "The data disappears the moment the process restarts, two requests modifying the array at the same time can race and corrupt it, and any new kind of question about the data means writing new manual search code instead of just asking for it — exactly the three problems databases exist to solve." },
+      { question: "What does it mean that a database usually runs as its own separate piece of software from your application?", answer: "Your application connects to the database over a connection (often a network connection, even if it's on the same machine) and sends it queries; the database process itself owns the data files and is responsible for storing, searching, and protecting them, independent of any one application process's lifecycle." },
+      { question: "Why does a plain file struggle when two processes try to write to it at the same time, but a database generally doesn't?", answer: "A plain file has no built-in coordination — two simultaneous writes can interleave and corrupt the file's contents. A database manages concurrent access internally (locking, isolation) so simultaneous writers are handled safely instead of stepping on each other." },
+      { question: "Is a database the same thing as a table?", answer: "No — a table is one organized structure for one kind of record (like `users`); a database is the overall system (and often a specific named collection of many related tables, like `users`, `orders`, and `products`) that stores and lets you query all of them together." },
+      { question: "What's the practical risk of writing your own ad-hoc 'search' logic over a JSON file instead of reaching for a real database?", answer: "You end up slowly reimplementing what a database already does well — filtering, sorting, safe concurrent writes — but without years of engineering behind it, so it tends to be slower, more bug-prone, and harder to extend as new questions come up." },
+      { question: "When would a plain file or an in-memory variable actually be the right choice over a database?", answer: "For a genuinely tiny, single-user, throwaway script — a quick calculation or a config file nobody else reads or writes concurrently — a database is unnecessary overhead; it earns its keep once data needs to persist, be shared, or be queried flexibly." },
     ],
     relatedTopics: ["tables-rows-columns", "basic-sql-queries"],
     keywords: ["database", "SQL", "data storage", "query"],
@@ -131,6 +142,7 @@ one row per actual person who signed up.
   email TEXT,
   age INTEGER
 );`,
+        language: "sql",
         explanation: "This defines the shape of the table: every row stored here will have exactly these four columns, each holding a specific kind of value.",
         walkthrough: [
           { code: "CREATE TABLE users (", explanation: "Starts the definition of a new table named users." },
@@ -228,6 +240,7 @@ duplicating data.
   name TEXT,
   email TEXT
 );`,
+        language: "sql",
         explanation: "Marking id as the PRIMARY KEY tells the database this column uniquely identifies each row, and it will enforce that no two rows share the same id.",
         walkthrough: [
           { code: "CREATE TABLE users (", explanation: "Begins the users table definition." },
@@ -250,6 +263,7 @@ duplicating data.
 -- 1  | 2       | 4599
 -- 2  | 2       | 1200
 -- 3  | 3       | 800`,
+        language: "sql",
         explanation: "Each order row stores just the id of the user who placed it. Orders 1 and 2 both belong to the user with id 2, without repeating that user's name or email in every row.",
       },
     ],
@@ -340,6 +354,7 @@ UPDATE users SET email = 'amara@newmail.com' WHERE id = 1;
 
 -- Remove a user
 DELETE FROM users WHERE id = 1;`,
+        language: "sql",
         explanation: "Each statement is a complete command on its own — SQL statements are typically written one operation at a time, ending in a semicolon.",
         walkthrough: [
           { code: "SELECT * FROM users;", explanation: "Asks for every column of every row in the users table. The * means 'all columns'." },
@@ -353,6 +368,7 @@ DELETE FROM users WHERE id = 1;`,
         code: `SELECT name, email FROM users;
 
 UPDATE users SET age = age + 1 WHERE id = 3;`,
+        language: "sql",
         explanation: "SELECT doesn't have to grab every column — you can list exactly the ones you need. UPDATE can also compute a new value based on the current one, like incrementing age by 1.",
       },
     ],
@@ -431,6 +447,7 @@ about, then sort them in a useful order.
         code: `SELECT name, total_cents
 FROM orders
 WHERE total_cents > 5000;`,
+        language: "sql",
         explanation: "Only returns orders whose total is more than 5000 cents ($50) — every other row is left out entirely.",
         walkthrough: [
           { code: "SELECT name, total_cents", explanation: "Choose which columns to return." },
@@ -445,6 +462,7 @@ FROM orders
 WHERE total_cents > 5000
 ORDER BY total_cents DESC
 LIMIT 3;`,
+        language: "sql",
         explanation: "Finds orders over $50, sorts the matching ones from highest total to lowest (DESC means descending), then keeps only the top 3.",
       },
     ],

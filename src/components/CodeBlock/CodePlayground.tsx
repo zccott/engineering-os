@@ -7,6 +7,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ReplayIcon from "@mui/icons-material/Replay";
 import type { ProblemExample } from "../../types/problem";
 import { buildAutoRunHarness } from "./autoRunHarness";
+import { withImplicitLog } from "./implicitLog";
 
 interface CodePlaygroundProps {
   code: string;
@@ -97,7 +98,12 @@ export default function CodePlayground({ code, testCases }: CodePlaygroundProps)
     setOutput([]);
     setRunning(true);
     const harness = buildAutoRunHarness(source, testCases);
-    iframe.contentWindow.postMessage({ type: "run", code: source + harness }, "*");
+    // If there's a problem to check answers against, run the source plus
+    // that harness unchanged. Otherwise, fall back to logging the last bare
+    // expression so a plain example still shows something on Run even when
+    // it never calls console.log itself.
+    const codeToRun = harness ? source + harness : withImplicitLog(source);
+    iframe.contentWindow.postMessage({ type: "run", code: codeToRun }, "*");
     // Nothing else logs "finished" — if the code never calls console.*,
     // just clear the running indicator shortly after.
     setTimeout(() => setRunning(false), 500);

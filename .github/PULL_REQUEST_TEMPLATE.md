@@ -19,6 +19,9 @@
 - [ ] New/edited content follows the topic template and markup rules in
       [CONTRIBUTING.md](../CONTRIBUTING.md)
 - [ ] This PR is scoped to one thing (not a mix of unrelated content + code changes)
+- [ ] New content is written in my own words, not copied/adapted from docs,
+      books, courses, etc. (see [Content licensing](../CONTRIBUTING.md#content-licensing)) —
+      or, if it is adapted from somewhere, I've said so above and linked the source
 
 ## Related issue
 

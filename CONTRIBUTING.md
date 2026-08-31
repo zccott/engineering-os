@@ -59,6 +59,27 @@ to touch a component to add a topic.
 Full conventions (architecture, MUI version quirks, etc.) are documented in
 [AGENTS.md](AGENTS.md) — read it before making structural changes.
 
+## Content licensing
+
+The whole repo — code and lesson content — is [MIT licensed](LICENSE), which
+means every contribution needs to be something the project can legally
+relicense as MIT.
+
+- **Write it yourself, in your own words.** Explaining a concept after
+  reading MDN, a book, a course, or the Postgres docs is exactly what this
+  project is for.
+- **Don't copy/paste text from another source** (docs sites, books,
+  articles, Stack Overflow answers, course transcripts, etc.), even if you
+  reword parts of it. If a topic is close enough to a source that it's more
+  "adapted" than "written from scratch," say so in the PR description and
+  link the source — that content likely can't be MIT-licensed and may need
+  to be rewritten or credited differently instead of merged as-is.
+- **Short code snippets** illustrating a language/API feature (a few lines,
+  the kind you'd find in any tutorial) are fine. Copying a large or
+  distinctive code sample from somewhere else is not.
+- When in doubt, ask in the PR rather than guessing — it's much easier to
+  sort out before merging than after.
+
 ## Code style
 
 - TypeScript, strict — no `any` without a good reason.

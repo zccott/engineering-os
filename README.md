@@ -1,16 +1,51 @@
 # EngineeringWiki
 
-[![CI](https://github.com/rahul-aot/engineering-os/actions/workflows/ci.yml/badge.svg)](https://github.com/rahul-aot/engineering-os/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![CI](https://github.com/zccott/engineeringwiki/actions/workflows/ci.yml/badge.svg)](https://github.com/zccott/engineeringwiki/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/zccott/engineeringwiki/blob/main/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/zccott/engineeringwiki/blob/main/CONTRIBUTING.md)
 
 > Learn once. Understand deeply. Never start from zero again.
 
-A minimal, community-driven software-engineering knowledge base — structured
-lessons in JavaScript, DSA, and System Design, from beginner to advanced.
+Website: https://engineeringwiki.vercel.app
 
-It started as a personal project and is now open source — contributions of
-new topics, corrections, and features are welcome.
+An open-source software-engineering knowledge base with structured,
+beginner-friendly lessons covering JavaScript, DSA, web fundamentals, backend
+development, databases, design patterns, software architecture, and system
+design — from beginner to advanced.
+
+It started as a personal learning project and is now open source.
+Contributions to topics, corrections, and features are welcome.
+
+## Subjects
+
+EngineeringWiki is organized around connected engineering subjects rather
+than isolated technologies — the goal is for topics within and across
+subjects to build on each other.
+
+Currently available (see `src/content/`):
+
+- JavaScript
+- TypeScript
+- DSA
+- Web Fundamentals
+- Backend
+- Databases
+- System Design
+- Software Architecture
+
+Long-term target structure for the core learning path:
+
+- JavaScript
+- DSA
+- Web Fundamentals
+- Backend
+- Databases
+- Design Patterns
+- Software Architecture
+- System Design
+
+Design Patterns doesn't exist as content yet. TypeScript is available today
+in addition to that core path.
 
 ## Stack
 
@@ -29,7 +64,7 @@ npm run dev
 src/
   components/   Layout, Sidebar, Header, TopicList, TopicPage, CodeBlock, ...
   pages/        Home, Subject, Topic, Progress, Bookmarks
-  content/      All lesson data (javascript/, dsa/, system-design/)
+  content/      All lesson data, organized by subject (see Subjects above)
   hooks/        useProgress, useBookmarks, useSearch (all localStorage-backed)
   theme/        MUI theme (light/dark)
   types/        Shared content + progress types
@@ -37,8 +72,8 @@ src/
 ```
 
 Content lives entirely in `src/content/` as plain TypeScript data, organized
-by subject and level. Adding a new topic means adding an entry to the
-relevant `content/<subject>/<level>.ts` file — no component changes needed.
+by subject and level. Each topic follows the same structured learning
+format, and adding a new topic should not require changes to UI components.
 
 ## Scripts
 
@@ -56,4 +91,10 @@ the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/zccott/engineeringwiki/blob/main/LICENSE) — covers
+this project's own code and content. Contributions
+are expected to be original (see
+[Content licensing](CONTRIBUTING.md#content-licensing)); anything adapted
+from a third-party source (docs, books, courses, etc.) keeps that source's
+own license/attribution rather than being folded into this project's MIT
+grant.

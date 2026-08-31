@@ -31,6 +31,7 @@ the right table.
         code: `SELECT orders.id, orders.total_cents, users.name
 FROM orders
 INNER JOIN users ON orders.user_id = users.id;`,
+        language: "sql",
         explanation: "Returns one row per order, but only for orders whose user_id actually matches a real user — an order with a broken or missing user_id would be left out entirely.",
         walkthrough: [
           { code: "SELECT orders.id, orders.total_cents, users.name", explanation: "Pulls columns from both tables into one result — this is only possible because they're being joined together." },
@@ -43,6 +44,7 @@ INNER JOIN users ON orders.user_id = users.id;`,
         code: `SELECT users.name, orders.id AS order_id
 FROM users
 LEFT JOIN orders ON orders.user_id = users.id;`,
+        language: "sql",
         explanation: "Returns every user, even ones who have never placed an order — for those, order_id simply comes back as empty (NULL) instead of the row disappearing.",
       },
     ],
@@ -123,6 +125,7 @@ customer" instead of one grand total across everyone.
         title: "A single summary value",
         code: `SELECT COUNT(*) AS total_orders, SUM(total_cents) AS revenue_cents
 FROM orders;`,
+        language: "sql",
         explanation: "Collapses the entire orders table into one row: how many orders exist, and their combined total.",
         walkthrough: [
           { code: "SELECT COUNT(*) AS total_orders,", explanation: "Counts how many rows are in the table, and labels that result column total_orders." },
@@ -135,6 +138,7 @@ FROM orders;`,
         code: `SELECT user_id, COUNT(*) AS order_count, SUM(total_cents) AS revenue_cents
 FROM orders
 GROUP BY user_id;`,
+        language: "sql",
         explanation: "Instead of one grand total, this produces one row per distinct user_id — each with that user's own order count and revenue total.",
       },
     ],
@@ -215,6 +219,7 @@ row, instead of reading the whole table.
 -- The database checks every row's email, one at a time,
 -- until it finds (or rules out) a match.
 SELECT * FROM users WHERE email = 'amara@example.com';`,
+        language: "sql",
         explanation: "On a table with millions of rows and no index, this query's cost grows directly with the table's size — it's called a 'full table scan.'",
       },
       {
@@ -223,6 +228,7 @@ SELECT * FROM users WHERE email = 'amara@example.com';`,
 
 -- Same query as before, now much faster:
 SELECT * FROM users WHERE email = 'amara@example.com';`,
+        language: "sql",
         explanation: "After the index exists, the same query can jump almost directly to the matching row using the index, instead of checking every row in the table.",
         walkthrough: [
           { code: "CREATE INDEX idx_users_email ON users (email);", explanation: "Builds a separate, ordered lookup structure mapping email values to their row locations." },
@@ -413,6 +419,7 @@ tries to write to it.
   price_cents INTEGER NOT NULL CHECK (price_cents > 0),
   in_stock BOOLEAN NOT NULL DEFAULT true
 );`,
+        language: "sql",
         explanation: "Four different rules, each enforced permanently by the database itself: no two products can share a sku, name and price_cents can never be left empty, price_cents must be a positive number, and in_stock quietly defaults to true when not specified.",
         walkthrough: [
           { code: "sku TEXT UNIQUE NOT NULL", explanation: "Combines two constraints on one column: it must have a value, and that value must not already exist on another row." },
@@ -425,6 +432,7 @@ tries to write to it.
         code: `INSERT INTO products (sku, name, price_cents)
 VALUES ('SKU-1', 'Desk Lamp', -500);
 -- ERROR: new row violates check constraint "products_price_cents_check"`,
+        language: "sql",
         explanation: "The insert never happens at all — the database rejects the entire statement the moment any one constraint fails, rather than saving a partially-valid row.",
       },
     ],
@@ -515,6 +523,7 @@ UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 UPDATE accounts SET balance = balance + 100 WHERE id = 2;
 
 COMMIT;`,
+        language: "sql",
         explanation: "Both updates are wrapped between BEGIN and COMMIT. If anything fails after the first UPDATE but before COMMIT, the database can roll the whole thing back, and Account 1's balance is restored as if the transfer never started.",
         walkthrough: [
           { code: "BEGIN;", explanation: "Starts a new transaction — nothing inside it is made permanent yet." },
@@ -530,6 +539,7 @@ COMMIT;`,
 UPDATE inventory SET quantity = quantity - 1 WHERE product_id = 42;
 -- Suppose application code checks the new quantity and finds it went negative:
 ROLLBACK;`,
+        language: "sql",
         explanation: "ROLLBACK explicitly undoes every change made since BEGIN, as if the transaction never happened — useful when application logic detects a problem partway through.",
       },
     ],
@@ -719,6 +729,7 @@ command-line client for talking to a database directly.
   metadata JSONB,
   created_at TIMESTAMPTZ DEFAULT now()
 );`,
+        language: "sql",
         explanation: "SERIAL sets up an auto-incrementing integer id, TEXT[] stores a list of strings directly in one column, JSONB holds a flexible structured document, and TIMESTAMPTZ is a timezone-aware timestamp that defaults to the current time.",
         walkthrough: [
           { code: "id SERIAL PRIMARY KEY", explanation: "Postgres creates a hidden sequence behind the scenes and uses it to auto-generate the next integer id for every new row." },
@@ -731,6 +742,7 @@ command-line client for talking to a database directly.
         code: `SELECT name, metadata->>'color' AS color
 FROM products
 WHERE metadata->>'in_stock' = 'true';`,
+        language: "sql",
         explanation: "-> extracts a nested value as JSON, while ->> extracts it as plain text — here ->> is used because the color is being compared and displayed as ordinary text, not nested JSON.",
       },
     ],
@@ -810,6 +822,7 @@ WHERE id IN (
   GROUP BY user_id
   HAVING COUNT(*) > 3
 );`,
+        language: "sql",
         explanation: "The inner query first finds every user_id with more than 3 orders; the outer query then finds the actual users matching those ids.",
         walkthrough: [
           { code: "SELECT user_id FROM orders GROUP BY user_id HAVING COUNT(*) > 3", explanation: "Runs first (conceptually) and produces a list of user ids meeting the condition." },
@@ -826,6 +839,7 @@ WHERE id IN (
 SELECT users.name
 FROM users
 JOIN frequent_buyers ON frequent_buyers.user_id = users.id;`,
+        language: "sql",
         explanation: "The WITH clause names the intermediate result frequent_buyers, and the rest of the query can join against it just like a real table — arguably easier to follow than a nested subquery once there's more than one step.",
       },
     ],
@@ -906,6 +920,7 @@ matter how far into the results you go.
 SELECT * FROM products
 ORDER BY id
 LIMIT 20 OFFSET 40;`,
+        language: "sql",
         explanation: "Skips the first 40 rows (pages 1 and 2), then returns the next 20 — page 3.",
         walkthrough: [
           { code: "ORDER BY id", explanation: "Gives every page a stable, repeatable order — pagination without one can show duplicate or missing rows if the underlying order isn't guaranteed between requests." },
@@ -919,6 +934,7 @@ LIMIT 20 OFFSET 40;`,
 WHERE id > 340
 ORDER BY id
 LIMIT 20;`,
+        language: "sql",
         explanation: "Instead of counting past rows with OFFSET, this jumps directly to rows after the last id seen on the previous page (340) — with an index on id, the database can find that starting point instantly, regardless of how deep into the results you are.",
       },
     ],

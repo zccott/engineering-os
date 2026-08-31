@@ -85,7 +85,7 @@ const llmsTxt = `# EngineeringWiki
 > Practice / Interview Questions.
 
 Full URL list: ${SITE_URL}/sitemap.xml
-Source: https://github.com/rahul-aot/engineering-os
+Source: https://github.com/zccott/engineeringwiki
 
 ${subjectSections}
 

@@ -7,11 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rahul-aot/engineering-os.git"
+    "url": "git+https://github.com/zccott/engineeringwiki.git"
   },
-  "homepage": "https://github.com/rahul-aot/engineering-os#readme",
+  "homepage": "https://github.com/zccott/engineeringwiki#readme",
   "bugs": {
-    "url": "https://github.com/rahul-aot/engineering-os/issues"
+    "url": "https://github.com/zccott/engineeringwiki/issues"
   },
   "scripts": {
     "start": "vite",

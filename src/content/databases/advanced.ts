@@ -31,6 +31,7 @@ new ones.
 
 ALTER TABLE users
 ADD COLUMN phone_number TEXT;`,
+        language: "sql",
         explanation: "This one file describes exactly one schema change. Its filename encodes an order (0007), so a migration tool knows it should run after migration 0006 and before 0008.",
         walkthrough: [
           { code: "-- migrations/0007_add_phone_number_to_users.sql", explanation: "The filename itself records the migration's order and intent — this is migration number 7." },
@@ -63,6 +64,7 @@ def upgrade():
 
 def downgrade():
     op.drop_column("users", "phone_number")`,
+        language: "python",
         explanation: "Alembic is the migration tool most commonly paired with SQLAlchemy/FastAPI — upgrade() and downgrade() are exactly the up/down pair from the JavaScript example, just Python syntax; running `alembic upgrade head` applies every migration not yet recorded, in order.",
       },
     ],
@@ -146,6 +148,7 @@ schema.
 -- Output might show:
 -- Seq Scan on orders  (cost=0.00..18334.00 rows=1 width=72)
 --   Filter: (customer_email = 'amara@example.com'::text)`,
+        language: "sql",
         explanation: "'Seq Scan' means a sequential (full table) scan — the database is checking every row. On a large table, that's the expensive part to fix.",
         walkthrough: [
           { code: "EXPLAIN SELECT * FROM orders WHERE customer_email = 'amara@example.com';", explanation: "Asks the database to describe how it would execute this query, without necessarily running it." },
@@ -162,6 +165,7 @@ EXPLAIN SELECT * FROM orders WHERE customer_email = 'amara@example.com';
 -- Output might now show:
 -- Index Scan using idx_orders_customer_email on orders
 --   (cost=0.42..8.44 rows=1 width=72)`,
+        language: "sql",
         explanation: "After the index exists, the plan switches to an 'Index Scan' with a dramatically lower estimated cost — the database jumps to matching rows instead of checking every one.",
       },
     ],
@@ -466,6 +470,7 @@ column alongside it.
         code: `SELECT name, category, price,
   RANK() OVER (PARTITION BY category ORDER BY price DESC) AS price_rank
 FROM products;`,
+        language: "sql",
         explanation: "Every product row is kept, but each one now also shows where its price ranks within its own category, highest first.",
         walkthrough: [
           { code: "PARTITION BY category", explanation: "Defines the 'window' of rows each ranking is computed within — restarting the count for every new category, instead of ranking across the whole table." },
@@ -478,6 +483,7 @@ FROM products;`,
         code: `SELECT id, amount,
   SUM(amount) OVER (ORDER BY id) AS running_total
 FROM payments;`,
+        language: "sql",
         explanation: "Each row shows its own amount plus the cumulative sum of every row up to and including it, ordered by id — no GROUP BY, and no rows merged together.",
       },
     ],
@@ -555,6 +561,7 @@ atomic database operation, removing that race condition entirely.
 VALUES ('home', 1)
 ON CONFLICT (page_id)
 DO UPDATE SET views = page_views.views + 1;`,
+        language: "sql",
         explanation: "If no row exists for 'home' yet, it's inserted with 1 view; if one already exists, its views column is incremented instead — atomically, with no gap for a race condition.",
         walkthrough: [
           { code: "INSERT INTO page_views (page_id, views) VALUES ('home', 1)", explanation: "Attempts a normal insert, as if no row for this page_id existed yet." },
@@ -567,6 +574,7 @@ DO UPDATE SET views = page_views.views + 1;`,
         code: `INSERT INTO users (email, name)
 VALUES ('a@example.com', 'Alice')
 ON CONFLICT (email) DO NOTHING;`,
+        language: "sql",
         explanation: "If a user with this email already exists, the statement simply does nothing instead of erroring or overwriting the existing row — useful for safe, repeatable deduplication.",
       },
     ],

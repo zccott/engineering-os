@@ -159,6 +159,81 @@ disposable. The skill is recognizing which situation you're in.
         answer:
           "An architectural decision is expensive and risky to reverse once other code depends on it (e.g., how modules are allowed to talk to each other); a coding decision, like a variable name or a single function's implementation, is cheap and low-risk to change.",
       },
+      {
+        question: "What actually makes an architectural decision 'expensive' to reverse, mechanically?",
+        answer:
+          "The number of other things that have come to depend on it. A variable name is depended on by nothing but its own function. A rule like 'all database access goes through one layer' gets depended on by every feature written after it, so undoing it means finding and rewriting every place that assumed it held.",
+      },
+      {
+        question: "Is software architecture the same thing as choosing a framework or technology stack?",
+        answer:
+          "No. Picking React or Postgres is a technology choice, and it's often reversible with enough effort. Architecture is how you organize logic *around* whatever technology you picked — the boundaries, layers, and data flow — and a bad architecture built on a great framework is still a bad architecture.",
+      },
+      {
+        question: "What's a practical heuristic for telling whether a decision you're about to make is architectural?",
+        answer:
+          "Ask how many other parts of the system would need to change if you reversed this decision next month. If the answer is 'just this function,' it's a coding decision. If the answer is 'every feature that touched this area since,' it's architectural.",
+      },
+      {
+        question: "Is architecture something you decide once at the start of a project and then move on from?",
+        answer:
+          "No — it's an ongoing set of decisions and constraints that get reinforced (or eroded) with every pull request. A codebase's architecture at year two is the sum of every structural choice made along the way, not just whatever was drawn on a whiteboard on day one.",
+      },
+      {
+        question: "What goes wrong when a team treats architecture as something only senior engineers do?",
+        answer:
+          "Every contributor is still making structural decisions daily — where to put a new module, whether to call another layer directly — whether or not they're labeled as 'architecture.' If only seniors are expected to think about it, those everyday decisions get made without the discipline that keeps the system coherent, and the architecture erodes one convenient shortcut at a time.",
+      },
+      {
+        question: "Can you give an example of over-architecting, and explain why it's a real cost even if the code works?",
+        answer:
+          "Building a plugin system with multiple abstraction layers for a script that will only ever have one, fixed way of running is over-architecting. It works, but every future reader has to trace through interfaces and indirection that exist for a flexibility the project will never use — that's ongoing comprehension cost paid for a benefit that never arrives.",
+      },
+      {
+        question: "Can you give an example of under-architecting, and what symptom would show up in the codebase?",
+        answer:
+          "A growing app where every screen's component directly queries the database is under-architected. The symptom is that a single schema change requires touching dozens of unrelated UI files, and no one can safely predict what a change will break, because there's no boundary containing the effect.",
+      },
+      {
+        question: "How would you decide whether a two-week prototype needs deliberate architecture?",
+        answer:
+          "Ask whether it will be thrown away or whether it's likely to become the actual product. If it's genuinely disposable, spending time on layers and boundaries optimizes for a future the code will never have; if there's real risk it becomes long-lived (which prototypes often do), it's worth at least the cheapest structural decisions — like keeping concerns separated — from the start.",
+      },
+      {
+        question: "Two teams build the exact same feature with different internal structures. Are both making architectural decisions?",
+        answer:
+          "Yes. Architecture isn't about what the software does — both teams shipped identical behavior — it's about how the code is organized to produce that behavior. The structural choice itself, even if invisible to the end user, is the architecture.",
+      },
+      {
+        question: "What's the relationship between architecture and the total cost of a system over its lifetime?",
+        answer:
+          "Architecture determines how much every future change costs, not just how much the initial build costs. A system built quickly with no structural thought might look cheaper on day one, but if every subsequent feature requires understanding and risking the entire codebase, the cumulative cost over years is far higher than a system with deliberate boundaries.",
+      },
+      {
+        question: "Why do boundaries — who's allowed to call whom — matter more than which specific technologies are used?",
+        answer:
+          "Because boundaries control blast radius: they determine how far the effect of a change can spread. Technology choices are usually swappable behind those boundaries without touching the rest of the system, but if the boundaries themselves don't exist, no technology choice will contain the damage of a bad change.",
+      },
+      {
+        question: "How does architecture show up differently in a 200-line script versus a codebase worked on by 50 engineers?",
+        answer:
+          "In a 200-line script, the 'architecture' might just be the order statements run in — implicit and low-stakes, since one person holds it all in their head. At 50-engineer scale, the same lack of deliberate structure means no one can hold the whole system in their head, so explicit boundaries and conventions become the only way multiple people can predict where logic lives and change it safely.",
+      },
+      {
+        question: "What's a red flag in a pull request that suggests an architectural decision is being made informally?",
+        answer:
+          "A change that quietly introduces a new way for one part of the system to reach into another — like a UI component importing a database client directly for 'just this one case.' It looks like a small, local fix, but it sets a structural precedent that other changes will copy.",
+      },
+      {
+        question: "If you joined a new team, how would you go about learning the architecture of an existing codebase?",
+        answer:
+          "Look for the boundaries in practice rather than a diagram: which folders or modules only get imported in one direction, where business rules actually live versus where they're supposed to live, and where a typical feature touches code across the system. Reading a few real pull requests often reveals the actual, lived architecture faster than any document.",
+      },
+      {
+        question: "Why might a technically correct implementation still represent bad architecture?",
+        answer:
+          "Because 'correct' usually only measures whether the output matches the requirement today. Architecture is judged by how well the system can absorb the *next* change — a correct feature built by copy-pasting business logic into five files is bad architecture even though it currently works, because the next change to that logic now has to be made five times.",
+      },
     ],
     relatedTopics: ["separation-of-concerns", "coupling-and-cohesion", "layered-architecture"],
     keywords: ["software architecture", "system design", "structural decisions", "codebase organization"],

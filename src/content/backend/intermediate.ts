@@ -853,6 +853,7 @@ async def get_item(item_id: int):
 @app.post("/items")
 async def create_item(item: Item):
     return {"created": item.name, "price": item.price}`,
+        language: "python",
         explanation: "Declaring item_id: int makes FastAPI convert and validate it automatically; declaring the Item Pydantic model does the same for the whole request body, rejecting requests missing name or price with a 422 error before your function even runs.",
         walkthrough: [
           { code: '@app.get("/items/{item_id}")', explanation: "A decorator-based route, equivalent to app.get(\"/items/:id\", ...) in Express — {item_id} is a path parameter." },
@@ -874,6 +875,7 @@ def get_current_user(token: str):
 @app.get("/profile")
 async def profile(user: dict = Depends(get_current_user)):
     return user`,
+        language: "python",
         explanation: "Depends() is FastAPI's equivalent of Express middleware for things like auth checks — instead of running before the handler in a chain, it's declared as a parameter the handler needs, and FastAPI resolves it before calling the route.",
       },
       {
@@ -890,6 +892,7 @@ async def add_timing_header(request: Request, call_next):
     duration = time.time() - start
     response.headers["X-Process-Time"] = str(duration)
     return response`,
+        language: "python",
         explanation: "This is FastAPI's actual middleware — closer to Express's (req, res, next) chain than Depends() is. It runs for every single request regardless of which route matches, and call_next(request) is exactly like calling next() in Express: it hands control onward and gives you a chance to act again once the response comes back.",
       },
     ],
@@ -1030,6 +1033,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 @app.get("/profile")
 async def profile(user: dict = Depends(get_current_user)):
     return user`,
+        language: "python",
         explanation: "OAuth2PasswordBearer tells FastAPI how to find the token (an Authorization: Bearer <token> header) and feeds it into get_current_user, which decodes and verifies the JWT's signature — the same protection as requireAuth, expressed as a dependency rather than a step in a middleware chain.",
       },
     ],
@@ -1179,6 +1183,7 @@ def delete_item(item_id: int, db: Session = Depends(get_db)):
     db.query(models.Item).filter(models.Item.id == item_id).delete()
     db.commit()
     return {"deleted": item_id}`,
+        language: "python",
         explanation: "The same four CRUD operations from SQL — Create, Read, Update, Delete — expressed through SQLAlchemy's query API instead of raw SQL text, each one wired to its own route.",
       },
       {
@@ -1195,6 +1200,7 @@ def transfer(from_id: int, to_id: int, amount: int, db: Session = Depends(get_db
         db.rollback()
         raise
     return {"status": "ok"}`,
+        language: "python",
         explanation: "Both balance changes need to succeed or fail together — nothing is actually written until db.commit() runs, and if anything raises before that, db.rollback() discards both pending changes so the accounts are never left half-updated.",
         walkthrough: [
           { code: "sender.balance -= amount", explanation: "SQLAlchemy tracks this change on the in-memory object, but it isn't written to the database yet — it stays pending until the session is committed." },

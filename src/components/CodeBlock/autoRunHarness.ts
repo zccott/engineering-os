@@ -44,13 +44,12 @@ function splitTopLevel(str: string, sep: string): string[] {
   return parts;
 }
 
-/** Index of a top-level `=` (not `==`, `!=`, `<=`, `>=`), or -1 if none. */
-function findAssignmentEquals(str: string): number {
+export function findAssignmentEquals(str: string): number {
   for (let i = 0; i < str.length; i++) {
     if (str[i] !== "=") continue;
     const prev = str[i - 1];
     const next = str[i + 1];
-    if (next === "=" || prev === "=" || prev === "!" || prev === "<" || prev === ">") continue;
+    if (next === "=" || next === ">" || prev === "=" || prev === "!" || prev === "<" || prev === ">") continue;
     return i;
   }
   return -1;

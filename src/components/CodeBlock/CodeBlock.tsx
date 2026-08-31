@@ -45,7 +45,9 @@ export default function CodeBlock({ example, testCases }: CodeBlockProps) {
         <code>{example.code}</code>
       </Box>
 
-      <CodePlayground code={example.code} testCases={testCases} />
+      {(!example.language || example.language === "javascript") && (
+        <CodePlayground code={example.code} testCases={testCases} />
+      )}
 
       {example.explanation && (
         <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>

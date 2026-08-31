@@ -6,7 +6,7 @@
 > Practice / Interview Questions.
 
 Full URL list: https://engineeringwiki.vercel.app/sitemap.xml
-Source: https://github.com/rahul-aot/engineering-os
+Source: https://github.com/zccott/engineeringwiki
 
 ## JavaScript
 
